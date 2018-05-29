@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="55e3cdde-0024-48aa-80e7-56fed3551539" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/../playboy/webpage/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../playboy/webpage/biquge.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../playboy/.idea/weibo.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../playboy/.idea/playboy.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../playboy/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../playboy/.idea/workspace.xml" afterDir="false" />
     </list>
@@ -14,57 +16,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../playboy/weibo/utils.py">
+      <file leaf-file-name="biquge.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../playboy/webpage/biquge.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="100">
-              <caret line="5" selection-start-line="5" selection-end-line="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="access_token.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../playboy/weibo/access_token.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="12" selection-start-line="12" selection-end-line="12" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="spider.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../playboy/weibo/spider.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="5" column="22" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
+            <state relative-caret-position="-127">
+              <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/../playboy/weibo/main.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="43" lean-forward="true" selection-start-line="43" selection-end-line="43" />
-              <folding>
-                <element signature="n#!!doc" />
-                <element signature="e#562#574#0" expanded="true" />
-                <element signature="e#993#1030#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tieba.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../playboy/tieba/tieba.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="10" selection-start-line="10" selection-end-line="10" />
-              <folding>
-                <element signature="e#16#45#0" expanded="true" />
+                <element signature="e#109#918#0" />
               </folding>
             </state>
           </provider>
@@ -97,12 +56,14 @@
         <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/tieba/tieba.py" />
         <option value="$PROJECT_DIR$/icon/add_url.py" />
+        <option value="$PROJECT_DIR$/../playboy/webpage/downloader.py" />
+        <option value="$PROJECT_DIR$/../playboy/webpage/biquge.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="222" />
-    <option name="y" value="14" />
+    <option name="x" value="843" />
+    <option name="y" value="21" />
     <option name="width" value="1604" />
     <option name="height" value="1048" />
   </component>
@@ -121,6 +82,16 @@
             <path>
               <item name="playboy" type="b2602c69:ProjectViewProjectNode" />
               <item name="playboy" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="playboy" type="b2602c69:ProjectViewProjectNode" />
+              <item name="playboy" type="462c0819:PsiDirectoryNode" />
+              <item name="res" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="playboy" type="b2602c69:ProjectViewProjectNode" />
+              <item name="playboy" type="462c0819:PsiDirectoryNode" />
+              <item name="webpage" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="playboy" type="b2602c69:ProjectViewProjectNode" />
@@ -160,7 +131,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.main (1)">
+  <component name="RunManager" selected="Python.downloader">
     <configuration name="add_url" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="playboy" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -174,6 +145,24 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/icon/add_url.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+    <configuration name="downloader" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="playboy" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../playboy/webpage" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="C:\liyu\gui\playboy\webpage\biquge.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -215,24 +204,6 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="miaopai" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="playboy" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\liyu\gui\weibo\weibo\spider.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
     <configuration name="spider" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="playboy" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -253,18 +224,18 @@
     </configuration>
     <list>
       <item itemvalue="Python.main" />
-      <item itemvalue="Python.miaopai" />
       <item itemvalue="Python.spider" />
       <item itemvalue="Python.add_url" />
       <item itemvalue="Python.main (1)" />
+      <item itemvalue="Python.downloader" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.downloader" />
         <item itemvalue="Python.main (1)" />
         <item itemvalue="Python.add_url" />
         <item itemvalue="Python.main" />
         <item itemvalue="Python.spider" />
-        <item itemvalue="Python.miaopai" />
       </list>
     </recent_temporary>
   </component>
@@ -290,7 +261,7 @@
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.2139738" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.20454545" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -538,30 +509,6 @@
     <entry file="file://$PROJECT_DIR$/helpers/post_pic.py" />
     <entry file="file://$PROJECT_DIR$/weather.py" />
     <entry file="file://$PROJECT_DIR$/cnblog.py" />
-    <entry file="file://$PROJECT_DIR$/../playboy/weibo/access_token.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="12" selection-start-line="12" selection-end-line="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../playboy/weibo/spider.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="5" column="22" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../playboy/weibo/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="5" selection-start-line="5" selection-end-line="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/icon/add_url.py" />
     <entry file="file://$PROJECT_DIR$/../playboy/tieba/tieba.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -573,14 +520,52 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../playboy/weibo/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/../playboy/weibo/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="43" lean-forward="true" selection-start-line="43" selection-end-line="43" />
+        <state relative-caret-position="120">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
           <folding>
             <element signature="n#!!doc" />
             <element signature="e#562#574#0" expanded="true" />
             <element signature="e#993#1030#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../playboy/weibo/spider.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="5" column="22" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../playboy/weibo/access_token.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../playboy/res/2.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../playboy/webpage/biquge.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-127">
+          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+            <element signature="e#109#918#0" />
           </folding>
         </state>
       </provider>
