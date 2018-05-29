@@ -1,3 +1,12 @@
+//package letschat;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 public class Client {  
   
     public static void main(String[] args) {  
@@ -5,10 +14,10 @@ public class Client {
             Socket client = new Socket("127.0.0.1", 9999);  
             PrintWriter pw = null;  
             InputStreamReader isr = null;  
-            Helper.println("Client started, ready to write content.");  
+            System.out.println("Client started, ready to write content.");  
             String input = "";  
             while (true) {  
-                Helper.print("Client : ");  
+            	System.out.print("Client : ");  
                 InputStream is = System.in;  
                 input = new BufferedReader(new InputStreamReader(is))  
                         .readLine();  
@@ -24,9 +33,9 @@ public class Client {
                     break;  
                 }  
                 isr = new InputStreamReader(client.getInputStream());  
-                Helper.println(new BufferedReader(isr).readLine());  
+                System.out.println(new BufferedReader(isr).readLine());  
             }  
-            Helper.println("Client stopped!");  
+            System.out.println("Client stopped!");  
         } catch (IOException e) {  
             // TODO Auto-generated catch block  
             e.printStackTrace();  

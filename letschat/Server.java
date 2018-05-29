@@ -1,9 +1,19 @@
+//package letschat;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 public class Server {  
   
     public static void main(String[] args) {  
         try {  
+        	//System.out.println("test");
             ServerSocket server = new ServerSocket(9999);  
-            Helper.println("Server started, waiting for message.");  
+            System.out.println("Server started, waiting for message.");  
             Socket client = server.accept();  
             PrintWriter pw = null;  
             while (true) {  
@@ -18,15 +28,15 @@ public class Server {
                     }  
                     break;  
                 }  
-                Helper.println(content);  
-                Helper.print("Server:");  
+                System.out.println(content);  
+                System.out.print("Server:");  
                 pw = new PrintWriter(client.getOutputStream(), true);  
                 BufferedReader in = new BufferedReader(new InputStreamReader(System.in));  
                 String output = "Server : " + in.readLine();  
                 pw.println(output);  
                 pw.flush();  
             }  
-            Helper.println("Client left! Server Closed.");  
+            System.out.println("Client left! Server Closed.");  
         } catch (IOException e) {  
             // TODO Auto-generated catch block  
             e.printStackTrace();  
