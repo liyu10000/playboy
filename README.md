@@ -2,6 +2,8 @@ This is my play station for various "python" functionalities. As specified by fo
 
 _letschat_: simple java program, server-to-client chatting
 
+_projects_: contains some python practice projects, go to the folder for more details
+
 _qq_: this is just a simple test to send messages on qq, via monitoring the actions of windows
 
 _tieba_: automatically get posts from popular sites and update on baidu tieba (not completed)
