@@ -5,3 +5,7 @@ project_01: image to character graphs
 project_02: 2048 game
 
 project_03: 12306 ticket checking service
+
+project_04: Gaode Map API use case: search and display house rent information
+
+project_06: crack verification code, based vector space search engine
