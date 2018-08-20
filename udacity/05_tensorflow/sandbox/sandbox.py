@@ -1,6 +1,38 @@
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
-from quiz import get_weights, get_biases, linear
+
+
+def get_weights(n_features, n_labels):
+    """
+    Return TensorFlow weights
+    :param n_features: Number of features
+    :param n_labels: Number of labels
+    :return: TensorFlow weights
+    """
+    # TODO: Return weights
+    return tf.Variable(tf.truncated_normal((n_features, n_labels)))
+
+
+def get_biases(n_labels):
+    """
+    Return TensorFlow bias
+    :param n_labels: Number of labels
+    :return: TensorFlow bias
+    """
+    # TODO: Return biases
+    return tf.Variable(tf.zeros(n_labels))
+
+
+def linear(input, w, b):
+    """
+    Return linear function in TensorFlow
+    :param input: TensorFlow input
+    :param w: TensorFlow weights
+    :param b: TensorFlow biases
+    :return: TensorFlow linear function
+    """
+    # TODO: Linear Function (xW + b)
+    return tf.add(tf.matmul(input, w), b)
 
 
 def mnist_features_labels(n_labels):
@@ -12,6 +44,7 @@ def mnist_features_labels(n_labels):
     mnist_features = []
     mnist_labels = []
 
+    # mnist = input_data.read_data_sets(train_dir='./mnist', one_hot=True, source_url='http://yann.lecun.com/exdb/mnist/')
     mnist = input_data.read_data_sets(train_dir='./mnist', one_hot=True)
 
     # In order to make quizzes run faster, we're only looking at 10000 images
