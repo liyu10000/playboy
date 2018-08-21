@@ -11,3 +11,5 @@ project_04: Gaode Map API use case: search and display house rent information
 project_06: crack verification code, based on vector space search engine
 
 project_08: a mimic of popular wechat game: airplane shooting, written in pygame
+
+project_13: encode information in image: Steganography
