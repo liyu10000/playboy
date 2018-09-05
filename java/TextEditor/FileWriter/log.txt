@@ -1,0 +1,4 @@
+Wed Sep 05 21:02:03 CST 2018: This is the first line.
+Wed Sep 05 21:02:03 CST 2018: This is the second line.
+Wed Sep 05 21:03:40 CST 2018: This is a line.
+Wed Sep 05 21:03:40 CST 2018: This is another line.
