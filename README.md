@@ -1,1 +1,1 @@
-This is the hub for the self-teaching of me on python programming language and deep learning.
+This is the hub for the self-teaching on python/java programming language and deep learning.
