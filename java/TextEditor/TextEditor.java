@@ -16,7 +16,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 
 
@@ -32,30 +34,22 @@ public class TextEditor {
 		JMenuBar menuBar = new JMenuBar();
 		// file menus
 		JMenu file = new JMenu("File");
-		JMenuItem file_o = new FileMenu("open");
-		JMenuItem file_s = new FileMenu("save");
-		JMenuItem file_p = new FileMenu("print");
-		JMenuItem file_n = new FileMenu("new");
-		file.add(file_o);
-		file.add(file_s);
-		file.add(file_p);
-		file.add(file_n);
+		file.add(new FileMenu("open"));
+		file.add(new FileMenu("save"));
+		file.add(new FileMenu("clear"));
+		file.add(new FileMenu("print"));
+		file.add(new FileMenu("close"));
 		menuBar.add(file);
 		// edit menus
 		JMenu edit = new JMenu("Edit");
 		JMenu edit_s = new JMenu("size");
-		JMenuItem edit_si = new EditMenu("increase");
-		JMenuItem edit_sd = new EditMenu("decrease");
-		JMenu edit_c = new JMenu("color");
-		JMenuItem edit_cb = new EditMenu("black");
-		JMenuItem edit_cr = new EditMenu("red");
-		JMenuItem edit_cg = new EditMenu("green");
-		edit_s.add(edit_si);
-		edit_s.add(edit_sd);
+		edit_s.add(new EditMenu("increase"));
+		edit_s.add(new EditMenu("decrease"));
 		edit.add(edit_s);
-		edit_c.add(edit_cb);
-		edit_c.add(edit_cr);
-		edit_c.add(edit_cg);
+		JMenu edit_c = new JMenu("color");
+		edit_c.add(new EditMenu("black"));
+		edit_c.add(new EditMenu("red"));
+		edit_c.add(new EditMenu("green"));
 		edit.add(edit_c);
 		menuBar.add(edit);
 		frame.setJMenuBar(menuBar);
@@ -85,20 +79,35 @@ public class TextEditor {
 		}
 		public void actionPerformed(ActionEvent e) {
 			String s = e.getActionCommand();
+			JFileChooser chooser;
 			switch (s) {
 				case "open":
-					JFileChooser chooser = new JFileChooser();
+					chooser = new JFileChooser(System.getProperty("java.class.path"));
 					if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-						
+						File f = new File(chooser.getSelectedFile().getAbsolutePath());
+						try {
+							FileReader fr = new FileReader(f);
+							BufferedReader br = new BufferedReader(fr);
+							String body = "", line = "";
+							while ((line = br.readLine()) != null) {
+								body += line + "\n";
+							}
+							text.setText(body);
+							br.close();
+						} catch (Exception evt) {
+							JOptionPane.showMessageDialog(frame, evt.getMessage());
+						}
+					} else {
+						System.out.println("open operation cancelled");
 					}
 					break;
 				case "save":
-					JFileChooser chooser = new JFileChooser();
+					chooser = new JFileChooser(System.getProperty("java.class.path"));
 					if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 						File f = new File(chooser.getSelectedFile().getAbsolutePath());
 						try {
-							FileWriter wr = new FileWriter(f, false);
-							BufferedWriter bw = new BufferedWriter(wr);
+							FileWriter fw = new FileWriter(f, false);
+							BufferedWriter bw = new BufferedWriter(fw);
 							bw.write(text.getText());
 							bw.flush();
 							bw.close();
@@ -106,15 +115,25 @@ public class TextEditor {
 							JOptionPane.showMessageDialog(frame, evt.getMessage());
 						}
 					} else {
-						JOptionPane.showMessageDialog(frame, "the user cancelled the operation");
+						System.out.println("save operation cancelled");
 					}
 					break;
-				case "print":
+				case "clear":
+					text.setText("");
 					break;
-				case "new":
+				case "print":
+					try {
+						text.print();
+					} catch (Exception evt) {
+						JOptionPane.showMessageDialog(frame, evt.getMessage());
+					}
+					break;
+				case "close":
+					frame.setVisible(false);
+					System.exit(0);
 					break;
 				default:
-					System.out.println("no match");
+					System.err.println("no match");
 			}
 		}
 	}
