@@ -1,0 +1,56 @@
+<project>
+
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+
+    <target name="compile">
+        <javac includeantruntime="false" srcdir="src" destdir="bin"/>
+    </target>
+
+    <target name="jar">
+        <mkdir dir="build/" />
+
+        <jar destfile="build/CentralIndexingServer.jar">
+          <fileset includes="server/*.class,util/*.class" dir="bin/"/>
+          <manifest>
+            <attribute name="Main-Class" value="server.CentralIndexingServer"/>
+          </manifest>
+        </jar>
+
+        <jar destfile="build/Client.jar">
+          <fileset includes="client/*.class,util/*.class,bench/*.class" dir="bin/"/>
+          <manifest>
+            <attribute name="Main-Class" value="client.Client"/>
+          </manifest>
+        </jar>
+
+        <jar destfile="build/BenchDownload.jar">
+          <fileset includes="client/*.class,util/*.class,bench/*.class" dir="bin/"/>
+          <manifest>
+            <attribute name="Main-Class" value="bench.BenchDownload"/>
+          </manifest>
+        </jar>
+
+        <jar destfile="build/BenchLookup.jar">
+          <fileset includes="client/*.class,util/*.class,bench/*.class" dir="bin/"/>
+          <manifest>
+            <attribute name="Main-Class" value="bench.BenchLookup"/>
+          </manifest>
+        </jar>
+
+        <jar destfile="build/BenchRegistry.jar">
+          <fileset includes="client/*.class,util/*.class,bench/*.class" dir="bin/"/>
+          <manifest>
+            <attribute name="Main-Class" value="bench.BenchRegistry"/>
+          </manifest>
+        </jar>
+
+        <jar destfile="build/BenchSingleRegistry.jar">
+          <fileset includes="client/*.class,util/*.class,bench/*.class" dir="bin/"/>
+          <manifest>
+            <attribute name="Main-Class" value="bench.BenchSingleRegistry"/>
+          </manifest>
+        </jar>
+    </target>
+</project>
