@@ -11,7 +11,7 @@ public class Client {
   
     public static void main(String[] args) {  
         try {  
-            Socket client = new Socket("127.0.0.1", 9999);  
+            Socket client = new Socket("192.168.120.20", 9999);  
             PrintWriter pw = null;  
             InputStreamReader isr = null;  
             System.out.println("Client started, ready to write content.");  
