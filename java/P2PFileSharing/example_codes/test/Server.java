@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -6,31 +8,24 @@ public class Server {
 	ServerSocket server;
 	Socket client;
 
-	listen(int port) {
+	public void listen(int port) {
 		try {
 			server = new ServerSocket(port);
+			System.out.println("Server started.");
 			client = server.accept();
-			System.out.println("Server started, waiting for message.");
-			PrintWriter out = null;
+			System.out.println("Client connected.");
+			BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			while (true) {
-				BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+				System.out.print("> ");
 				String line = in.readLine();
+				System.out.println(line);
 				if (line.equals("exit") || line.equals("quit")) {
-					in.close();
 					server.close();
-					if (out != null) {
-						out.close();
-					}
+					in.close();
 					break;
 				}
-				System.out.println(line);
-                System.out.print("Server:");
-                BufferedReader serverIn = new BufferedReader(new InputStreamReader(System.in));
-                String output = "Server : " + serverIn.readLine();
-                out = new PrintWriter(client.getOutputStream(), true)
-                out.println(output);
 			}
-			System.out.println("Client left! Server Closed.");
+			System.out.println("\nClient left! Server Closed.");
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(-1);
@@ -38,6 +33,6 @@ public class Server {
 	}
 
 	public static void main(String[] args) {
-		new Server(9999);
+		(new Server()).listen(9999);
 	}
 }
