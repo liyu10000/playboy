@@ -51,14 +51,15 @@ public class Server {
 		FileInputStream fis = new FileInputStream(f);
 		BufferedInputStream bis = new BufferedInputStream(fis);
 		bis.read(b, 0, b.length);
-		DataOutputStream dos = new DataOutputStream(client.getOutputStream());
+		DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
 		dos.write(b, 0, b.length);
 		dos.flush();
-		System.out.println("body sent.");
-
+	
 		fis.close();
 		bis.close();
 		dos.close();
+		
+		System.out.println("body sent.");
 	}
 
 	public void send(String filename) throws IOException {

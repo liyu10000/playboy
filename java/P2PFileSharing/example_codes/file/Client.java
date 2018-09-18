@@ -38,7 +38,7 @@ public class Client {
 					signal = -1;
 			}
 		}
-		System.out.print("head saved.");
+		System.out.println("head saved.");
 	}
 
 	public void saveBody(Socket socket) throws IOException {
@@ -58,16 +58,18 @@ public class Client {
 		
 		fos.close();
 		dis.close();
+		System.out.println("body saved.");
 	}
 
-	public void save(String filename) throws IOException {
+	public void save() throws IOException {
 		saveHead(client);
 		saveBody(client);
 		System.out.println("Read " + filename + " from server.");
+		client.close();
 		System.out.println("\nClient session ended.");
 	}
 
-	public static void main(String[] args) {
-		(new Client(args[0], Integer.valueOf(args[1]))).save(args[2]);
+	public static void main(String[] args) throws IOException {
+		(new Client(args[0], Integer.valueOf(args[1]))).save();
 	}
 }
