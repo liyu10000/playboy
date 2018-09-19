@@ -18,7 +18,7 @@ public class Server {
 		}
 	}
 
-	public void sendHead(Socket socket, String directory, String filename, long length) throws IOException {
+	public void _send(Socket socket, String directory, String filename, long length) throws IOException {
 		DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
 		
 		// start
@@ -40,18 +40,17 @@ public class Server {
 		dos.writeByte(-1);
 		dos.flush();
 
-		dos.close();
+		// dos.close();
 
 		System.out.println("head sent.");
-	}
 
-	public void sendBody(Socket socket, String filename) throws IOException {
+
 		File f = new File(filename);
 		byte[] b = new byte[(int) f.length()];
 		FileInputStream fis = new FileInputStream(f);
 		BufferedInputStream bis = new BufferedInputStream(fis);
 		bis.read(b, 0, b.length);
-		DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+		// DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
 		dos.write(b, 0, b.length);
 		dos.flush();
 	
@@ -67,8 +66,7 @@ public class Server {
 		System.out.println("Client connected.");
 
 		File f = new File(filename);
-		sendHead(client, "/home", filename, f.length());
-		sendBody(client, filename);
+		_send(client, "/home", filename, f.length());
 
 		client.close();
 		System.out.println("\nServer session ended.");

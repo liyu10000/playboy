@@ -19,7 +19,7 @@ public class Client {
 		}
 	}
 
-	public void saveHead(Socket socket) throws IOException {
+	public void _save(Socket socket) throws IOException {
 		DataInputStream dis = new DataInputStream(socket.getInputStream());
 		byte signal = dis.readByte();
 		while (signal != -1) {
@@ -38,11 +38,10 @@ public class Client {
 					signal = -1;
 			}
 		}
-		System.out.println("head saved.");
-	}
+		// dis.close();
+		System.out.println("head saved. filename: " + filename);
 
-	public void saveBody(Socket socket) throws IOException {
-		DataInputStream dis = new DataInputStream(socket.getInputStream());
+		// DataInputStream dis = new DataInputStream(socket.getInputStream());
 		FileOutputStream fos = new FileOutputStream(filename);
 
 		byte[] b = new byte[4096];
@@ -62,8 +61,7 @@ public class Client {
 	}
 
 	public void save() throws IOException {
-		saveHead(client);
-		saveBody(client);
+		_save(client);
 		System.out.println("Read " + filename + " from server.");
 		client.close();
 		System.out.println("\nClient session ended.");
