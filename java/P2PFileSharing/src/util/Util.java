@@ -13,19 +13,19 @@ import util.FileInfo;
 
 public class Util {
 	public static void push(Socket socket, DataOutputStream dos, FileInfo fileInfo, boolean isServer) throws IOException {
+		// session starts
+		dos.writeInt(1);
+
 		// directory
 		if (!isServer) {
 			dos.writeUTF(fileInfo.getServerDir());
 		} else {
 			dos.writeUTF(fileInfo.getClientDir());
 		}
-		dos.flush();
 		// filename
 		dos.writeUTF(fileInfo.getFilename());
-		dos.flush();
 		// filesize
 		dos.writeLong(fileInfo.getFileSize());
-		dos.flush();
 		// System.out.println("[INFO] head sent.");
 
 		byte[] b = new byte[(int)fileInfo.getFileSize()];
@@ -33,13 +33,19 @@ public class Util {
 		BufferedInputStream bis = new BufferedInputStream(fis);
 		bis.read(b, 0, b.length);
 		dos.write(b, 0, b.length);
+		// System.out.println("[INFO] body sent.");
+
+		// session ends
+		dos.writeInt(-1);
 		dos.flush();
 		fis.close();
 		bis.close();
-		// System.out.println("[INFO] body sent.");
 	}
 
 	public static void pull(Socket socket, DataInputStream dis) throws IOException {
+		// session starts
+		int start = dis.readInt();
+
 		// directory
 		String directory = dis.readUTF();
 		// filename
@@ -61,5 +67,8 @@ public class Util {
 		}
 		fos.close();
 		// System.out.println("[INFO] body saved.");
+
+		// session ends
+		int end = dis.readInt();
 	}
 }
