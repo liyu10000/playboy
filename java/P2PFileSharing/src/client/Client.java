@@ -1,7 +1,12 @@
+package client;
+
 import java.io.IOException;
-import java.io.FileOutputStream;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.net.Socket;
+
+import util.Util;
+import util.FileInfo;
 
 public class Client {
 	private String host;
@@ -12,41 +17,23 @@ public class Client {
 		this.port = port;
 	}
 
-	public void save(Socket socket, DataInputStream dis) throws IOException {
-		String directory = dis.readUTF();
-		String filename = dis.readUTF();
-		int length = dis.readInt();
-		// System.out.println("[INFO] head saved.");
-
-		FileOutputStream fos = new FileOutputStream(filename);
-		byte[] b = new byte[4096];
-		int filesize = length;
-		int read = 0;
-		int totalRead = 0;
-		int remaining = filesize;
-		while ((read = dis.read(b, 0, Math.min(b.length, remaining))) > 0) {
-			totalRead += read;
-			remaining -= read;
-			fos.write(b, 0, read);
-		}
-		fos.close();
-		// System.out.println("[INFO] body saved.");
-
-		System.out.println("[INFO] received " + filename + " from server.");
-	}
-
 	public void control() throws IOException {
 		Socket client = new Socket(host, port);
 		System.out.println("Connected to server " + host + ":" + port);
 		DataInputStream dis = new DataInputStream(client.getInputStream());
+		DataOutputStream dos = new DataOutputStream(client.getOutputStream());
 		while (true) {
 			String signal = dis.readUTF();
 			System.out.println("[SIGNAL] " + signal);
 			switch(signal) {
 				case "client_to_server":
+					// FileInfo fileInfo = new FileInfo("test2.jpg", "/home/sakulaki/yolo-yuli/playboy/java/P2PFileSharing/res", "C:/tsimage/playboy/java/P2PFileSharing/res", false);
+					// Util.push(client, dos, fileInfo, false);
+					// System.out.println("[INFO] sent file to server.");
 					break;
 				case "server_to_client":
-					save(client, dis);
+					Util.pull(client, dis);
+					System.out.println("[INFO] received file from server.");
 					break;
 			}
 			if (signal.equals("close")) {
