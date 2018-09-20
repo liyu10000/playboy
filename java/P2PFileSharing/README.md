@@ -5,10 +5,12 @@
 <pre>
 Server:
 	"server_to_client"
-		TBD
+		2 read file info
+		3 send file
 Client:
 	"server_to_client"
-		TBD
+		1 send file info
+		4 read file
 </pre>
 
 #### job: client_to_server

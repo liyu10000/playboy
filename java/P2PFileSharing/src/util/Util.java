@@ -8,22 +8,30 @@ import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
+import java.util.AbstractMap.SimpleEntry;
 
 import util.FileInfo;
 
 public class Util {
-	public static void push(Socket socket, DataOutputStream dos, FileInfo fileInfo, boolean isServer) throws IOException {
+	public static void pushInfo(Socket socket, DataOutputStream dos, FileInfo fileInfo) throws IOException {
 		// session starts
 		dos.writeInt(1);
 
-		// directory
-		if (!isServer) {
-			dos.writeUTF(fileInfo.getServerDir());
-		} else {
-			dos.writeUTF(fileInfo.getClientDir());
-		}
-		// filename
-		dos.writeUTF(fileInfo.getFilename());
+		// server full filename
+		dos.writeUTF(fileInfo.getServerFile());
+		// client full filename
+		dos.writeUTF(fileInfo.getClientFile());
+
+		// session ends
+		dos.writeInt(-1);
+		dos.flush();
+	}
+
+	public static void push(Socket socket, DataOutputStream dos, FileInfo fileInfo) throws IOException {
+		// session starts
+		dos.writeInt(1);
+
+		dos.writeUTF(fileInfo.getRemoteFile());
 		// filesize
 		dos.writeLong(fileInfo.getFileSize());
 		// System.out.println("[INFO] head sent.");
@@ -42,19 +50,32 @@ public class Util {
 		bis.close();
 	}
 
+	public static SimpleEntry<String, String> pullInfo(Socket socket, DataInputStream dis) throws IOException {
+		// session starts
+		int start = dis.readInt();
+
+		// server full filename
+		String serverFile = dis.readUTF();
+		// client full filename
+		String clientFile = dis.readUTF();
+
+		// session ends
+		int end = dis.readInt();
+
+		return new SimpleEntry<String, String>(serverFile, clientFile);
+	}
+
 	public static void pull(Socket socket, DataInputStream dis) throws IOException {
 		// session starts
 		int start = dis.readInt();
 
-		// directory
-		String directory = dis.readUTF();
-		// filename
+		// full filename
 		String filename = dis.readUTF();
 		// filesize
 		long length = dis.readLong();
 		// System.out.println("[INFO] head saved.");
 
-		FileOutputStream fos = new FileOutputStream(directory + File.separatorChar + filename);
+		FileOutputStream fos = new FileOutputStream(filename);
 		byte[] b = new byte[4096];
 		int filesize = (int) length;
 		int read = 0;

@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.AbstractMap.SimpleEntry;
 
 import util.Util;
 import util.FileInfo;
@@ -34,8 +35,9 @@ public class Server {
 					System.out.println("[INFO] received file from client.");
 					break;
 				case "server_to_client":
-					FileInfo fileInfo = new FileInfo("test.jpg", "/home/sakulaki/yolo-yuli/playboy/java/P2PFileSharing/res", "C:/tsimage/playboy/java/P2PFileSharing/res", true);
-					Util.push(client, dos, fileInfo, true);
+					SimpleEntry<String, String> twoFilenames = Util.pullInfo(client, dis);
+					FileInfo fileInfo = new FileInfo(twoFilenames.getKey(), twoFilenames.getValue(), true);
+					Util.push(client, dos, fileInfo);
 					System.out.println("[INFO] sent file to client.");
 					break;
 			}

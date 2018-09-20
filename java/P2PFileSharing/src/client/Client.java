@@ -22,11 +22,11 @@ public class Client {
 
 	public ArrayList<SimpleEntry<String, FileInfo>> control() {
 		ArrayList<SimpleEntry<String, FileInfo>> commands = new ArrayList<SimpleEntry<String, FileInfo>>();
-		SimpleEntry<String, FileInfo> cmd1 = new SimpleEntry<>("client_to_server", new FileInfo("test.txt", "/home/sakulaki/yolo-yuli/playboy/java/P2PFileSharing/res", "C:/tsimage/playboy/java/P2PFileSharing/res", false));
+		SimpleEntry<String, FileInfo> cmd1 = new SimpleEntry<>("client_to_server", new FileInfo("/home/sakulaki/yolo-yuli/playboy/java/P2PFileSharing/res/test.txt", "C:/tsimage/playboy/java/P2PFileSharing/res/test.txt", false));
 		commands.add(cmd1);
-		SimpleEntry<String, FileInfo> cmd2 = new SimpleEntry<>("server_to_client", null);
+		SimpleEntry<String, FileInfo> cmd2 = new SimpleEntry<>("server_to_client", new FileInfo("/home/sakulaki/yolo-yuli/playboy/java/P2PFileSharing/res/test.jpg", "C:/tsimage/playboy/java/P2PFileSharing/res/test.jpg", false));
 		commands.add(cmd2);
-		SimpleEntry<String, FileInfo> cmd3 = new SimpleEntry<>("client_to_server", new FileInfo("test.xml", "/home/sakulaki/yolo-yuli/playboy/java/P2PFileSharing/res", "C:/tsimage/playboy/java/P2PFileSharing/res", false));
+		SimpleEntry<String, FileInfo> cmd3 = new SimpleEntry<>("client_to_server", new FileInfo("/home/sakulaki/yolo-yuli/playboy/java/P2PFileSharing/res/test.xml", "C:/tsimage/playboy/java/P2PFileSharing/res/test.xml", false));
 		commands.add(cmd3);
 		SimpleEntry<String, FileInfo> cmd4 = new SimpleEntry<>("close", null);
 		commands.add(cmd4);
@@ -47,10 +47,11 @@ public class Client {
 			System.out.println("[SIGNAL] " + signal);
 			switch(signal) {
 				case "client_to_server":
-					Util.push(client, dos, fileInfo, false);
+					Util.push(client, dos, fileInfo);
 					System.out.println("[INFO] sent file to server.");
 					break;
 				case "server_to_client":
+					Util.pushInfo(client, dos, fileInfo);
 					Util.pull(client, dis);
 					System.out.println("[INFO] received file from server.");
 					break;

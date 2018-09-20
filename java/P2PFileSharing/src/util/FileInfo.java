@@ -4,47 +4,55 @@ import java.io.File;
 
 
 public class FileInfo {
-	private String filename;
-	private String serverDir;
-	private String clientDir;
+	private String serverFile;
+	private String clientFile;
+	private boolean isServer;
 	private File file;
 	private long lastModified;
 
-	public FileInfo(String filename, String serverDir, String clientDir, boolean isServer) {
-		this.filename = filename;
-		this.serverDir = serverDir;
-		this.clientDir = clientDir;
+	public FileInfo(String serverFile, String clientFile, boolean isServer) {
+		this.serverFile = serverFile;
+		this.clientFile = clientFile;
+		this.isServer = isServer;
 		if (isServer) {
-			this.file = new File(serverDir, filename);
+			this.file = new File(serverFile);
 		} else {
-			this.file = new File(clientDir, filename);
+			this.file = new File(clientFile);
 		}
 		this.lastModified = this.file.lastModified();
 	}
 
 	public String getFilename() {
-		return filename;
+		return this.file.getName();
 	}
 
-	public String getServerDir() {
-		return serverDir;
+	public String getServerFile() {
+		return this.serverFile;
 	}
 
-	public String getClientDir() {
-		return clientDir;
+	public String getClientFile() {
+		return this.clientFile;
+	}
+
+	public String getRemoteFile() {
+		if (this.isServer) {
+			return this.clientFile;
+		} else {
+			return this.serverFile;
+		}
 	}
 
 	public File getFile() {
-		return file;
+		return this.file;
 	}
 
 	public long getFileSize() {
-		return file.length();
+		return this.file.length();
 	}
 
 	public boolean hasModified() {
-		if (file.lastModified() > lastModified) {
-			lastModified = file.lastModified();
+		if (this.file.lastModified() > this.lastModified) {
+			this.lastModified = this.file.lastModified();
 			return true;
 		}
 		return false;
