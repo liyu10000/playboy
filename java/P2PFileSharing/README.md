@@ -1,6 +1,8 @@
 ### dataflow
-	Server waits for commands from Client, push or pull.
-
+ - Mode: Server waits for commands from Client, push or pull.
+ - Compile: _javac -d bin src/server/*.java src/client/*.java src/util/*.java_
+ - Execute: _java server.Server [port]_  /  _java client.Client [server host] [server port]_
+ 
 #### job: server_to_client
 <pre>
 Server:

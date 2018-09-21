@@ -5,7 +5,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.AbstractMap.SimpleEntry;
 
 import util.Util;
 import util.FileInfo;
@@ -17,7 +16,7 @@ public class Server {
 		this.port = port;
 	}
 
-	public void run() throws Exception {
+	public void run() throws IOException {
 		ServerSocket server = new ServerSocket(port);
 		System.out.println("Server started at port: " + port);
 		Socket client = server.accept();
@@ -35,8 +34,8 @@ public class Server {
 					System.out.println("[INFO] received file from client.");
 					break;
 				case "server_to_client":
-					SimpleEntry<String, String> twoFilenames = Util.pullInfo(client, dis);
-					FileInfo fileInfo = new FileInfo(twoFilenames.getKey(), twoFilenames.getValue(), true);
+					String[] twoFilenames = Util.pullInfo(client, dis);
+					FileInfo fileInfo = new FileInfo(twoFilenames[0], twoFilenames[1], true);
 					Util.push(client, dos, fileInfo);
 					System.out.println("[INFO] sent file to client.");
 					break;
@@ -51,7 +50,7 @@ public class Server {
 		System.out.println("\nServer session ended.");
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
 		(new Server(Integer.valueOf(args[0]))).run();
 	}
 }

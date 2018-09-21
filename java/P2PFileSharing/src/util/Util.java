@@ -8,7 +8,6 @@ import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
-import java.util.AbstractMap.SimpleEntry;
 
 import util.FileInfo;
 
@@ -50,7 +49,7 @@ public class Util {
 		bis.close();
 	}
 
-	public static SimpleEntry<String, String> pullInfo(Socket socket, DataInputStream dis) throws IOException {
+	public static String[] pullInfo(Socket socket, DataInputStream dis) throws IOException {
 		// session starts
 		int start = dis.readInt();
 
@@ -62,7 +61,7 @@ public class Util {
 		// session ends
 		int end = dis.readInt();
 
-		return new SimpleEntry<String, String>(serverFile, clientFile);
+		return new String[]{serverFile, clientFile};
 	}
 
 	public static void pull(Socket socket, DataInputStream dis) throws IOException {
