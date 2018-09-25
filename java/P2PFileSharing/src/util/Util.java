@@ -18,9 +18,9 @@ public class Util {
 			// session starts
 			dos.writeInt(1);
 
-			// server full filename
+			// server full fileName
 			dos.writeUTF(fileInfo.getServerFile());
-			// client full filename
+			// client full fileName
 			dos.writeUTF(fileInfo.getClientFile());
 
 			// session ends
@@ -61,9 +61,9 @@ public class Util {
 			fis.close();
 			bis.close();
 
-			System.out.println("[INFO  ] sent file: " + fileInfo.getFullFilename() + ".");
+			System.out.println("[INFO  ] sent file: " + fileInfo.getFullFileName() + ".");
 		} catch (IOException e) {
-			System.err.println("[ERROR ] failed to push file: " + fileInfo.getFullFilename() + ".");
+			System.err.println("[ERROR ] failed to push file: " + fileInfo.getFullFileName() + ".");
 			// e.printStackTrace();
 		}
 	}
@@ -73,9 +73,9 @@ public class Util {
 			// session starts
 			int start = dis.readInt();
 
-			// server full filename
+			// server full fileName
 			String serverFile = dis.readUTF();
-			// client full filename
+			// client full fileName
 			String clientFile = dis.readUTF();
 
 			// session ends
@@ -98,13 +98,13 @@ public class Util {
 				return;
 			}
 
-			// full filename
-			String filename = dis.readUTF();
+			// full fileName
+			String fileName = dis.readUTF();
 			// filesize
 			long length = dis.readLong();
 			// System.out.println("[INFO] head saved.");
 
-			FileOutputStream fos = new FileOutputStream(filename);
+			FileOutputStream fos = new FileOutputStream(fileName);
 			byte[] b = new byte[4096];
 			int filesize = (int) length;
 			int read = 0;
@@ -121,7 +121,7 @@ public class Util {
 			// session ends
 			int end = dis.readInt();
 
-			System.out.println("[INFO  ] received file: " + filename + ".");
+			System.out.println("[INFO  ] received file: " + fileName + ".");
 		} catch (FileNotFoundException e) {
 			// e.printStackTrace();
 			System.err.println("[ERROR ] file not found on local server.");

@@ -57,8 +57,8 @@ public class Server {
 						Util.pull(client, dis);
 						break;
 					case "server_to_client":
-						String[] twoFilenames = Util.pullInfo(client, dis);
-						FileInfo fileInfo = new FileInfo(twoFilenames[0], twoFilenames[1], true);
+						String[] twoFileNames = Util.pullInfo(client, dis);
+						FileInfo fileInfo = new FileInfo(twoFileNames[0], twoFileNames[1], true);
 						Util.push(client, dos, fileInfo);
 						break;
 				}
@@ -112,8 +112,8 @@ public class Server {
 					System.out.println("[INFO] received file from client.");
 					break;
 				case "server_to_client":
-					String[] twoFilenames = Util.pullInfo(client, dis);
-					FileInfo fileInfo = new FileInfo(twoFilenames[0], twoFilenames[1], true);
+					String[] twoFileNames = Util.pullInfo(client, dis);
+					FileInfo fileInfo = new FileInfo(twoFileNames[0], twoFileNames[1], true);
 					Util.push(client, dos, fileInfo);
 					System.out.println("[INFO] sent file to client.");
 					break;

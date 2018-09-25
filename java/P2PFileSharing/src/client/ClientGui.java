@@ -42,6 +42,7 @@ import java.util.Enumeration;
 
 import client.Client;
 import util.FileInfo;
+import util.CsvIO;
 
 public class ClientGui {
 	private Client clientCase;
@@ -71,9 +72,28 @@ public class ClientGui {
 	private void loadData() {
 		this.columnNames = new String[] {"index", "server (remote)", "client (local)"};
 		this.fileInfoList = new ArrayList<FileInfo>();
-		this.fileInfoList.add(new FileInfo("/home/sakulaki/yolo-yuli/playboy/java/P2PFileSharing/res/test.txt", "C:/tsimage/playboy/java/P2PFileSharing/res/test.txt", false));
-		this.fileInfoList.add(new FileInfo("C:/tsimage/playboy/java/P2PFileSharing/res/test2.jpg", "C:/tsimage/playboy/java/P2PFileSharing/res/test.jpg", false));
-		this.fileInfoList.add(new FileInfo("/home/sakulaki/yolo-yuli/playboy/java/P2PFileSharing/res/test.xml", "C:/tsimage/playboy/java/P2PFileSharing/res/test.xml", false));
+		File csvFile = new File((new File(System.getProperty("user.dir"))).getParentFile(), "res"+File.separator+"fileList.csv");
+		if (!csvFile.exists()) {
+			this.fileInfoList = null;
+			return;
+		}
+		ArrayList<ArrayList<String>> data = CsvIO.readCsv(csvFile.getAbsolutePath());
+		for (ArrayList<String> row : data) {
+			this.fileInfoList.add(new FileInfo(row.get(1), row.get(2), false));
+		}
+	}
+
+	private void saveData() {
+		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+		for (int i = 0; i < table.getRowCount(); i++) {
+			ArrayList<String> row = new ArrayList<String>();
+			for (int j = 0; j < table.getColumnCount(); j++) {
+				row.add((String) table.getValueAt(i, j));
+			}
+			data.add(row);
+		}
+		File csvFile = new File((new File(System.getProperty("user.dir"))).getParentFile(), "res"+File.separator+"fileList.csv");
+		CsvIO.writeCsv(csvFile.getAbsolutePath(), data);
 	}
 
 	private void guiSetup() {
@@ -162,7 +182,7 @@ public class ClientGui {
 
 		// file lists panel
 		JPanel panelDown = new JPanel();
-		panelDown.setBorder(BorderFactory.createTitledBorder(eBorder, "file lists"));
+		panelDown.setBorder(BorderFactory.createTitledBorder(eBorder, "file list"));
 		panelDown.setLayout(new BorderLayout());
 		TableModel tableModel = new MyTableModel();
 		table = new JTable(tableModel);
@@ -222,7 +242,7 @@ public class ClientGui {
 
 	private void appendRow(FileInfo fileInfo) {
 		MyTableModel model = (MyTableModel) table.getModel();
-		model.addRow(fileInfo);
+		model.appendRow(fileInfo);
 	}
 
 	private void removeRows(int[] rows) {
@@ -249,8 +269,11 @@ public class ClientGui {
 					connectStatus.setText("connected");
 				}
 			} else if (s.equals("disconnect")) {
-				closeClient();
-				connectStatus.setText("disconnected");
+				saveData();
+				if (connectStatus.getText().equals("connected")) {
+					closeClient();
+					connectStatus.setText("disconnected");
+				}
 			} else if (!s.equals("add") && rows.length == 0) {
 				JOptionPane.showMessageDialog(frame, "no file choosed", "warning", JOptionPane.WARNING_MESSAGE);
 			} else if (s.equals("push") || s.equals("pull")) {
@@ -288,14 +311,14 @@ public class ClientGui {
 		public Object getValueAt(int row, int col) {
 			FileInfo fileInfo = fileInfoList.get(row);
 			switch (col) {
-				case 0: return row;
+				case 0: return String.valueOf(row);
 				case 1: return fileInfo.getServerFile();
 				case 2: return fileInfo.getClientFile();
 				default: return null;
 			}
 		}
 
-		public void addRow(FileInfo fileInfo) {
+		public void appendRow(FileInfo fileInfo) {
 			fileInfoList.add(fileInfo);
 			fireTableRowsInserted(fileInfoList.size()-1, fileInfoList.size()-1);
 

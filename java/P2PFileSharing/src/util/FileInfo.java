@@ -26,11 +26,11 @@ public class FileInfo {
 		return this.file.exists();
 	}
 
-	public String getFilename() {
+	public String getFileName() {
 		return this.file.getName();
 	}
 
-	public String getFullFilename() {
+	public String getFullFileName() {
 		return this.file.getAbsolutePath();
 	}
 
