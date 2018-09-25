@@ -17,7 +17,6 @@ public class CsvIO {
 			fileReader = new BufferedReader(new FileReader(fileName));
 			String line;
 			while ((line = fileReader.readLine()) != null) {
-				System.out.println(line);
 				ArrayList<String> row = new ArrayList<String>();
 				String[] tokens = line.split(DELIMITER);
 				for (String token : tokens) {
@@ -30,6 +29,7 @@ public class CsvIO {
 		} finally {
 			try {
 				fileReader.close();
+				System.out.println("[INFO  ] loaded data from " + fileName);
 			} catch (IOException e) {
 				System.err.println("[ERROR ] failed to close BufferedReader.");
 			}
@@ -54,6 +54,7 @@ public class CsvIO {
 			try {
 				fileWriter.flush();
 				fileWriter.close();
+				System.out.println("[INFO  ] saved data to " + fileName);
 			} catch (IOException e) {
 				System.err.println("[ERROR ] failed to close FileWriter.");
 			}

@@ -74,7 +74,7 @@ public class ClientGui {
 		this.fileInfoList = new ArrayList<FileInfo>();
 		File csvFile = new File((new File(System.getProperty("user.dir"))).getParentFile(), "res"+File.separator+"fileList.csv");
 		if (!csvFile.exists()) {
-			this.fileInfoList = null;
+			this.fileInfoList.add(new FileInfo("sample file on remote", "sample file on local", false));
 			return;
 		}
 		ArrayList<ArrayList<String>> data = CsvIO.readCsv(csvFile.getAbsolutePath());
@@ -252,6 +252,22 @@ public class ClientGui {
 		}
 	}
 
+	private FileInfo getNewFileInfo() {
+		JPanel inputPanel = new JPanel();
+		JTextField serverFile = new JTextField(20);
+		JTextField clientFile = new JTextField(20);
+		inputPanel.add(new JLabel("server file name:"));
+		inputPanel.add(serverFile);
+		inputPanel.add(new JLabel("client file name:"));
+		inputPanel.add(clientFile);
+
+		int option = JOptionPane.showConfirmDialog(frame, inputPanel, "Input server and client file path name", JOptionPane.OK_CANCEL_OPTION);
+		if (option == JOptionPane.OK_OPTION) {
+			return new FileInfo(serverFile.getText(), clientFile.getText(), false);
+		}
+		return null;
+	}
+
 	private class MyButton extends JButton implements ActionListener {
 		public MyButton(String name) {
 			super(name);
@@ -274,9 +290,9 @@ public class ClientGui {
 					closeClient();
 					connectStatus.setText("disconnected");
 				}
-			} else if (!s.equals("add") && rows.length == 0) {
+			} else if (rows.length == 0 && (s.equals("push") || s.equals("pull") || s.equals("delete"))) {
 				JOptionPane.showMessageDialog(frame, "no file choosed", "warning", JOptionPane.WARNING_MESSAGE);
-			} else if (s.equals("push") || s.equals("pull")) {
+			} else if (connectStatus.getText().equals("connected") && (s.equals("push") || s.equals("pull"))) {
 				String signal;
 				if (s.equals("push")) {
 					signal = "client_to_server";
@@ -289,8 +305,10 @@ public class ClientGui {
 			} else if (s.equals("delete")) {
 				removeRows(rows);
 			} else if (s.equals("add")) {
-				FileInfo fileInfo = new FileInfo("/home/sakulaki/yolo-yuli/playboy/java/P2PFileSharing/res/test.py", "C:/tsimage/playboy/java/P2PFileSharing/res/test.py", false);
-				appendRow(fileInfo);
+				FileInfo fileInfo = getNewFileInfo();
+				if (fileInfo != null) {
+					appendRow(fileInfo);
+				}
 			}
 		}
 	}
