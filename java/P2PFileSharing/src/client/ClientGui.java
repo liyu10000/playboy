@@ -49,17 +49,19 @@ public class ClientGui {
 	private JTable table;
 	private String[] columnNames;
 	private List<FileInfo> fileInfoList;
+	private JTextField hostText;
+	private JTextField portText;
+	private JLabel connectStatus;
 
 	public ClientGui() {
 		loadData();
 		setUIFont(new FontUIResource(new Font("MS Mincho", Font.PLAIN, 20)));
 		guiSetup();
-		startClient("127.0.0.1", 9999);
 	}
 
-	private void startClient(String host, int port) {
+	private boolean startClient(String host, int port) {
 		clientCase = new Client(host, port);
-		clientCase.start();
+		return clientCase.start();
 	}
 
 	private void closeClient() {
@@ -83,6 +85,74 @@ public class ClientGui {
 		// connection panel
 		JPanel panelUp = new JPanel();
 		panelUp.setBorder(BorderFactory.createTitledBorder(eBorder, "connection"));
+		panelUp.setLayout(new GridBagLayout());
+		GridBagConstraints cPanelUp = new GridBagConstraints();
+		JLabel hostMark = new JLabel("host:");
+		cPanelUp.fill = GridBagConstraints.NONE;
+		cPanelUp.anchor = GridBagConstraints.LINE_END;
+		cPanelUp.insets = new Insets(0,0,0,20);
+		cPanelUp.gridx = 1; cPanelUp.gridy = 0;
+		cPanelUp.gridwidth = 1; cPanelUp.gridheight = 1;
+		cPanelUp.weightx = 10;
+		panelUp.add(hostMark, cPanelUp);
+		hostText = new JTextField();
+		hostText.setText("127.0.0.1");
+		cPanelUp.fill = GridBagConstraints.HORIZONTAL;
+		cPanelUp.anchor = GridBagConstraints.LINE_START;
+		cPanelUp.insets = new Insets(0,0,0,0);
+		cPanelUp.gridx = 2; cPanelUp.gridy = 0;
+		cPanelUp.gridwidth = 2; cPanelUp.gridheight = 1;
+		cPanelUp.weightx = 20;
+		panelUp.add(hostText, cPanelUp);
+		JLabel portMark = new JLabel("port:");
+		cPanelUp.fill = GridBagConstraints.NONE;
+		cPanelUp.anchor = GridBagConstraints.LINE_END;
+		cPanelUp.insets = new Insets(0,0,0,20);
+		cPanelUp.gridx = 5; cPanelUp.gridy = 0;
+		cPanelUp.gridwidth = 1; cPanelUp.gridheight = 1;
+		cPanelUp.weightx = 10;
+		panelUp.add(portMark, cPanelUp);
+		portText = new JTextField();
+		portText.setText("9999");
+		cPanelUp.fill = GridBagConstraints.HORIZONTAL;
+		cPanelUp.anchor = GridBagConstraints.LINE_START;
+		cPanelUp.insets = new Insets(0,0,0,0);
+		cPanelUp.gridx = 6; cPanelUp.gridy = 0;
+		cPanelUp.gridwidth = 2; cPanelUp.gridheight = 1;
+		cPanelUp.weightx = 20;
+		panelUp.add(portText, cPanelUp);
+		JLabel connectMark = new JLabel("status:");
+		cPanelUp.fill = GridBagConstraints.NONE;
+		cPanelUp.anchor = GridBagConstraints.LINE_END;
+		cPanelUp.insets = new Insets(0,0,0,20);
+		cPanelUp.gridx = 9; cPanelUp.gridy = 0;
+		cPanelUp.gridwidth = 1; cPanelUp.gridheight = 1;
+		cPanelUp.weightx = 10;
+		panelUp.add(connectMark, cPanelUp);
+		connectStatus = new JLabel("disconnected");
+		cPanelUp.fill = GridBagConstraints.HORIZONTAL;
+		cPanelUp.anchor = GridBagConstraints.CENTER;
+		cPanelUp.insets = new Insets(0,0,0,0);
+		cPanelUp.gridx = 10; cPanelUp.gridy = 0;
+		cPanelUp.gridwidth = 2; cPanelUp.gridheight = 1;
+		cPanelUp.weightx = 20;
+		panelUp.add(connectStatus, cPanelUp);
+		JButton connectBtn = new MyButton("connect");
+		cPanelUp.fill = GridBagConstraints.HORIZONTAL;
+		cPanelUp.anchor = GridBagConstraints.CENTER;
+		cPanelUp.insets = new Insets(0,10,0,10);
+		cPanelUp.gridx = 12; cPanelUp.gridy = 0;
+		cPanelUp.gridwidth = 2; cPanelUp.gridheight = 1;
+		cPanelUp.weightx = 20;
+		panelUp.add(connectBtn, cPanelUp);
+		JButton disconnectBtn = new MyButton("disconnect");
+		cPanelUp.fill = GridBagConstraints.HORIZONTAL;
+		cPanelUp.anchor = GridBagConstraints.CENTER;
+		cPanelUp.insets = new Insets(0,10,0,20);
+		cPanelUp.gridx = 14; cPanelUp.gridy = 0;
+		cPanelUp.gridwidth = 2; cPanelUp.gridheight = 1;
+		cPanelUp.weightx = 20;
+		panelUp.add(disconnectBtn, cPanelUp);
 		c.gridx = c.gridy = 0;
 		c.gridwidth = 2; c.gridheight = 1;
 		c.fill = GridBagConstraints.BOTH;
@@ -116,7 +186,6 @@ public class ClientGui {
 		JPanel panelRight = new JPanel();
 		panelRight.setBorder(BorderFactory.createTitledBorder(eBorder, "control"));
 		panelRight.setLayout(new BoxLayout(panelRight, BoxLayout.Y_AXIS));
-
 		JButton push = new MyButton("push");
 		JButton pull = new MyButton("pull");
 		JButton delete = new MyButton("delete");
@@ -128,7 +197,6 @@ public class ClientGui {
 		panelRight.add(delete);
 		panelRight.add(Box.createVerticalStrut(20));
 		panelRight.add(add);
-
 		c.gridx = 1; c.gridy = 1;
 		c.gridwidth = 1; c.gridheight = 1;
 		c.weightx = 15; c.weighty =85;
@@ -174,7 +242,16 @@ public class ClientGui {
 		public void actionPerformed(ActionEvent e) {
 			String s = e.getActionCommand();
 			int[] rows = table.getSelectedRows();
-			if (!s.equals("add") && rows.length == 0) {
+			if (s.equals("connect")) {
+				String host = hostText.getText();
+				int port = Integer.valueOf(portText.getText());
+				if (startClient(host, port)) {
+					connectStatus.setText("connected");
+				}
+			} else if (s.equals("disconnect")) {
+				closeClient();
+				connectStatus.setText("disconnected");
+			} else if (!s.equals("add") && rows.length == 0) {
 				JOptionPane.showMessageDialog(frame, "no file choosed", "warning", JOptionPane.WARNING_MESSAGE);
 			} else if (s.equals("push") || s.equals("pull")) {
 				String signal;

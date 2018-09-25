@@ -24,15 +24,17 @@ public class Client {
 		this.port = port;
 	}
 
-	public void start() {
+	public boolean start() {
 		try {
 			client = new Socket(host, port);
 			System.out.println("\n[INFO  ] Connected to server " + host + ":" + port);
 			dis = new DataInputStream(client.getInputStream());
 			dos = new DataOutputStream(client.getOutputStream());
+			return true;
 		} catch (Exception e) {
 			System.err.println("\n[ERROR ] failed to start client.");
 			// e.printStackTrace();
+			return false;
 		}
 	}
 
