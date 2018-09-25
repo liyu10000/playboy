@@ -1,6 +1,7 @@
 package server;
 
 import java.io.IOException;
+import java.io.EOFException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.ServerSocket;
@@ -14,7 +15,6 @@ public class Server {
 	private int port;
 	private ServerSocket server;
 	private Socket client;
-	private boolean connected;
 	private DataInputStream dis;
 	private DataOutputStream dos;
 
@@ -38,17 +38,15 @@ public class Server {
 			System.out.println("\n[INFO  ] Client connected.");
 			dis = new DataInputStream(client.getInputStream());
 			dos = new DataOutputStream(client.getOutputStream());
-			connected = true;
 		} catch (IOException e) {
 			// e.printStackTrace();
 			System.err.println("\n[ERROR ] client failed to connect with server.");
-			connected = false;
 		}
 	}
 
 	public void shuttle() {
 		connect();
-		while (connected) {
+		while (true) {
 			try {
 				String signal = dis.readUTF();
 				System.out.println("[SIGNAL] " + signal);
@@ -68,6 +66,9 @@ public class Server {
 			} catch (SocketException e) {
 				// e.printStackTrace();
 				System.err.println("[ERROR ] connection from client interrupted.");
+				connect();
+			} catch (EOFException e) {
+				System.out.println("[INFO  ] connection from client closed.");
 				connect();
 			} catch (IOException e) {
 				// e.printStackTrace();
