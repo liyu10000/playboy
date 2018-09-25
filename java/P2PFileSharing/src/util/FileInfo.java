@@ -22,8 +22,16 @@ public class FileInfo {
 		this.lastModified = this.file.lastModified();
 	}
 
+	public boolean exists() {
+		return this.file.exists();
+	}
+
 	public String getFilename() {
 		return this.file.getName();
+	}
+
+	public String getFullFilename() {
+		return this.file.getAbsolutePath();
 	}
 
 	public String getServerFile() {

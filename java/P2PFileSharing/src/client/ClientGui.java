@@ -8,13 +8,12 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-//import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Dimension;
 import java.io.File;
-//import java.io.IOException;
+import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -41,11 +40,11 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
-// import client.Client;
+import client.Client;
 import util.FileInfo;
 
 public class ClientGui {
-	// private Client client;
+	private Client clientCase;
 	private JFrame frame;
 	private JTable table;
 	private String[] columnNames;
@@ -55,13 +54,23 @@ public class ClientGui {
 		loadData();
 		setUIFont(new FontUIResource(new Font("MS Mincho", Font.PLAIN, 20)));
 		guiSetup();
+		startClient("127.0.0.1", 9999);
+	}
+
+	private void startClient(String host, int port) {
+		clientCase = new Client(host, port);
+		clientCase.start();
+	}
+
+	private void closeClient() {
+		clientCase.close();
 	}
 
 	private void loadData() {
 		this.columnNames = new String[] {"index", "server (remote)", "client (local)"};
 		this.fileInfoList = new ArrayList<FileInfo>();
 		this.fileInfoList.add(new FileInfo("/home/sakulaki/yolo-yuli/playboy/java/P2PFileSharing/res/test.txt", "C:/tsimage/playboy/java/P2PFileSharing/res/test.txt", false));
-		this.fileInfoList.add(new FileInfo("/home/sakulaki/yolo-yuli/playboy/java/P2PFileSharing/res/test.jpg", "C:/tsimage/playboy/java/P2PFileSharing/res/test.jpg", false));
+		this.fileInfoList.add(new FileInfo("C:/tsimage/playboy/java/P2PFileSharing/res/test2.jpg", "C:/tsimage/playboy/java/P2PFileSharing/res/test.jpg", false));
 		this.fileInfoList.add(new FileInfo("/home/sakulaki/yolo-yuli/playboy/java/P2PFileSharing/res/test.xml", "C:/tsimage/playboy/java/P2PFileSharing/res/test.xml", false));
 	}
 
@@ -85,7 +94,7 @@ public class ClientGui {
 		JPanel panelDown = new JPanel();
 		panelDown.setBorder(BorderFactory.createTitledBorder(eBorder, "file lists"));
 		panelDown.setLayout(new BorderLayout());
-		TableModel tableModel = new MyTableModel(fileInfoList, columnNames);
+		TableModel tableModel = new MyTableModel();
 		table = new JTable(tableModel);
 		table.setRowHeight(25);
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -167,40 +176,36 @@ public class ClientGui {
 			int[] rows = table.getSelectedRows();
 			if (!s.equals("add") && rows.length == 0) {
 				JOptionPane.showMessageDialog(frame, "no file choosed", "warning", JOptionPane.WARNING_MESSAGE);
+			} else if (s.equals("push") || s.equals("pull")) {
+				String signal;
+				if (s.equals("push")) {
+					signal = "client_to_server";
+				} else {
+					signal = "server_to_client";
+				}
+				for (int i = 0; i < rows.length; i++) {
+					clientCase.shuttle(signal, fileInfoList.get(rows[i]));
+				}
+			} else if (s.equals("delete")) {
+				removeRows(rows);
+			} else if (s.equals("add")) {
+				FileInfo fileInfo = new FileInfo("/home/sakulaki/yolo-yuli/playboy/java/P2PFileSharing/res/test.py", "C:/tsimage/playboy/java/P2PFileSharing/res/test.py", false);
+				appendRow(fileInfo);
 			}
-			switch (s) {
-				case "push":
-					break;
-				case "pull":
-					break;
-				case "delete":
-					removeRows(rows);
-					break;
-				case "add":
-					FileInfo fileInfo = new FileInfo("/home/sakulaki/yolo-yuli/playboy/java/P2PFileSharing/res/test.py", "C:/tsimage/playboy/java/P2PFileSharing/res/test.py", false);
-					appendRow(fileInfo);
-					break;
-			}
-			System.out.println(table.getRowCount());
 		}
 	}
 
 	private class MyTableModel extends AbstractTableModel {
-		private List<FileInfo> fileInfoList;
-		private String[] columnNames;
-
-		public MyTableModel(List<FileInfo> fileInfoList, String[] columnNames) {
-			super();
-			this.fileInfoList = fileInfoList;
-			this.columnNames = columnNames;
-		}
-
 		public int getColumnCount() {
 			return columnNames.length;
 		}
 
 		public int getRowCount() {
 			return fileInfoList.size();
+		}
+
+		public String getColumnName(int col) {
+			return columnNames[col];
 		}
 
 		public Object getValueAt(int row, int col) {

@@ -5,17 +5,95 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 import util.Util;
 import util.FileInfo;
 
 public class Server {
 	private int port;
+	private ServerSocket server;
+	private Socket client;
+	private boolean connected;
+	private DataInputStream dis;
+	private DataOutputStream dos;
 
 	public Server(int port) {
 		this.port = port;
 	}
 
+	public void start() {
+		try {
+			server = new ServerSocket(port);
+			System.out.println("[INFO  ] Server started at port: " + port);
+		} catch (IOException e) {
+			// e.printStackTrace();
+			System.err.println("[ERROR ] cannot start server.");
+		}
+	}
+
+	private void connect() {
+		try {
+			client = server.accept();
+			System.out.println("\n[INFO  ] Client connected.");
+			dis = new DataInputStream(client.getInputStream());
+			dos = new DataOutputStream(client.getOutputStream());
+			connected = true;
+		} catch (IOException e) {
+			// e.printStackTrace();
+			System.err.println("\n[ERROR ] client failed to connect with server.");
+			connected = false;
+		}
+	}
+
+	public void shuttle() {
+		connect();
+		while (connected) {
+			try {
+				String signal = dis.readUTF();
+				System.out.println("[SIGNAL] " + signal);
+				switch(signal) {
+					case "client_to_server":
+						Util.pull(client, dis);
+						break;
+					case "server_to_client":
+						String[] twoFilenames = Util.pullInfo(client, dis);
+						FileInfo fileInfo = new FileInfo(twoFilenames[0], twoFilenames[1], true);
+						Util.push(client, dos, fileInfo);
+						break;
+				}
+			} catch (NullPointerException e) {
+				// e.printStackTrace();
+				System.err.println("[ERROR ] pulling file info failed.");
+			} catch (SocketException e) {
+				// e.printStackTrace();
+				System.err.println("[ERROR ] connection from client interrupted.");
+				connect();
+			} catch (IOException e) {
+				// e.printStackTrace();
+				System.err.println("[ERROR ] undetermined error.");
+			}
+		}
+	}
+
+	public void close() {
+		try {
+			client.close();
+			server.close();
+			System.out.println("\n[INFO  ] Server session ended.");
+		} catch (IOException e) {
+			// e.printStackTrace();
+			System.err.println("\n[ERROR ] failed to close connection.");
+		}
+	}
+
+	public static void main(String[] args) {
+		Server serverCase = new Server(Integer.valueOf(args[0]));
+		serverCase.start();
+		serverCase.shuttle();
+	}
+
+	/* used in commond line test
 	public void run() throws IOException {
 		ServerSocket server = new ServerSocket(port);
 		System.out.println("Server started at port: " + port);
@@ -53,4 +131,5 @@ public class Server {
 	public static void main(String[] args) throws IOException {
 		(new Server(Integer.valueOf(args[0]))).run();
 	}
+	*/
 }
