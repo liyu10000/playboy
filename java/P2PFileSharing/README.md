@@ -1,7 +1,13 @@
-### dataflow
- - Mode: Server waits for commands from Client, push or pull.
+## File Sharing Program
+
+### compile and run
  - Compile: _javac -d bin src/server/*.java src/client/*.java src/util/*.java_
- - Execute: _java server.Server [port]_  /  _java client.Client [server host] [server port]_
+ - Execute (server side): _java server.Server [port]_
+ - Execute (client side, cmd mode): _java client.Client [server host] [server port]_
+ - Execute (client side, gui mode): _java client.ClientGui_
+
+### dataflow
+ - Norm: Server waits for commands from Client, push or pull.
  
 #### job: server_to_client
 <pre>
