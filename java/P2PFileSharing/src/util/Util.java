@@ -104,7 +104,9 @@ public class Util {
 			long length = dis.readLong();
 			// System.out.println("[INFO] head saved.");
 
-			FileOutputStream fos = new FileOutputStream(fileName);
+			File file = new File(fileName);
+			file.getParentFile().mkdirs();
+			FileOutputStream fos = new FileOutputStream(file);
 			byte[] b = new byte[4096];
 			int filesize = (int) length;
 			int read = 0;
