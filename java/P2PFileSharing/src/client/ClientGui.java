@@ -63,7 +63,7 @@ public class ClientGui {
 	}
 
 	private void loadData() {
-		this.columnNames = new String[] {"index", "server (remote)", "client (local)"};
+		this.columnNames = new String[] {"index", "name", "server (remote)", "client (local)"};
 		this.fileInfoList = new ArrayList<FileInfo>();
 		File csvFile = new File((new File(System.getProperty("user.dir"))).getParentFile(), "res"+File.separator+"fileList.csv");
 		if (!csvFile.exists()) {
@@ -72,7 +72,7 @@ public class ClientGui {
 		}
 		ArrayList<ArrayList<String>> data = CsvIO.readCsv(csvFile.getAbsolutePath());
 		for (ArrayList<String> row : data) {
-			this.fileInfoList.add(new FileInfo(row.get(1), row.get(2), false));
+			this.fileInfoList.add(new FileInfo(row.get(2), row.get(3), false));
 		}
 	}
 
@@ -328,8 +328,9 @@ public class ClientGui {
 			FileInfo fileInfo = fileInfoList.get(row);
 			switch (col) {
 				case 0: return String.valueOf(row);
-				case 1: return fileInfo.getServerFile();
-				case 2: return fileInfo.getClientFile();
+				case 1: return fileInfo.getFileName();
+				case 2: return fileInfo.getServerFile();
+				case 3: return fileInfo.getClientFile();
 				default: return null;
 			}
 		}
