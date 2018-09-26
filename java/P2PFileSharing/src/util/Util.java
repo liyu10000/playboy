@@ -9,6 +9,8 @@ import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
+import java.util.List;
+import java.util.ArrayList;
 
 import util.FileInfo;
 
@@ -40,30 +42,35 @@ public class Util {
 				return;
 			}
 
-			// session starts
-			dos.writeInt(1);
+			List<FileInfo> subFileInfos = fileInfo.getSubFileInfos();
+			// send number of subfiles (note: the file itself is included)
+			dos.writeInt(subFileInfos.size());
+			
+			for (FileInfo subFileInfo : subFileInfos) {
+				// full fileName
+				dos.writeUTF(subFileInfo.getRemoteFile());
+				// filesize
+				dos.writeLong(subFileInfo.getFileSize());
+				// System.out.println("[INFO] head sent.");
 
-			dos.writeUTF(fileInfo.getRemoteFile());
-			// filesize
-			dos.writeLong(fileInfo.getFileSize());
-			// System.out.println("[INFO] head sent.");
+				byte[] b = new byte[(int)subFileInfo.getFileSize()];
+				FileInputStream fis = new FileInputStream(subFileInfo.getFile());
+				BufferedInputStream bis = new BufferedInputStream(fis);
+				bis.read(b, 0, b.length);
+				dos.write(b, 0, b.length);
+				// System.out.println("[INFO] body sent.");
 
-			byte[] b = new byte[(int)fileInfo.getFileSize()];
-			FileInputStream fis = new FileInputStream(fileInfo.getFile());
-			BufferedInputStream bis = new BufferedInputStream(fis);
-			bis.read(b, 0, b.length);
-			dos.write(b, 0, b.length);
-			// System.out.println("[INFO] body sent.");
+				dos.flush();
+				fis.close();
+				bis.close();
+
+				System.out.println("[INFO  ] sent file: " + subFileInfo.getFullFileName() + ".");
+			}
 
 			// session ends
 			dos.writeInt(-1);
-			dos.flush();
-			fis.close();
-			bis.close();
-
-			System.out.println("[INFO  ] sent file: " + fileInfo.getFullFileName() + ".");
 		} catch (IOException e) {
-			System.err.println("[ERROR ] failed to push file: " + fileInfo.getFullFileName() + ".");
+			System.err.println("[ERROR ] failed to push file/dir: " + fileInfo.getFullFileName() + ".");
 			// e.printStackTrace();
 		}
 	}
@@ -98,32 +105,33 @@ public class Util {
 				return;
 			}
 
-			// full fileName
-			String fileName = dis.readUTF();
-			// filesize
-			long length = dis.readLong();
-			// System.out.println("[INFO] head saved.");
+			for (int i = 0; i < start; i++) {
+				// full fileName
+				String fileName = dis.readUTF();
+				// filesize
+				long length = dis.readLong();
+				// System.out.println("[INFO] head saved.");
 
-			File file = new File(fileName);
-			file.getParentFile().mkdirs();
-			FileOutputStream fos = new FileOutputStream(file);
-			byte[] b = new byte[4096];
-			int filesize = (int) length;
-			int read = 0;
-			int totalRead = 0;
-			int remaining = filesize;
-			while ((read = dis.read(b, 0, Math.min(b.length, remaining))) > 0) {
-				totalRead += read;
-				remaining -= read;
-				fos.write(b, 0, read);
+				File file = new File(fileName);
+				file.getParentFile().mkdirs();
+				FileOutputStream fos = new FileOutputStream(file);
+				byte[] b = new byte[4096];
+				int filesize = (int) length;
+				int read = 0;
+				int totalRead = 0;
+				int remaining = filesize;
+				while ((read = dis.read(b, 0, Math.min(b.length, remaining))) > 0) {
+					totalRead += read;
+					remaining -= read;
+					fos.write(b, 0, read);
+				}
+				fos.close();
+				// System.out.println("[INFO] body saved.");
+				System.out.println("[INFO  ] received file: " + fileName + ".");
 			}
-			fos.close();
-			// System.out.println("[INFO] body saved.");
 
 			// session ends
 			int end = dis.readInt();
-
-			System.out.println("[INFO  ] received file: " + fileName + ".");
 		} catch (FileNotFoundException e) {
 			// e.printStackTrace();
 			System.err.println("[ERROR ] file not found on local server.");

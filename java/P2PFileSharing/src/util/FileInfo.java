@@ -1,6 +1,10 @@
 package util;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.ArrayList;
 
 
 public class FileInfo {
@@ -24,6 +28,14 @@ public class FileInfo {
 
 	public boolean exists() {
 		return this.file.exists();
+	}
+
+	public boolean isFile() {
+		return this.file.isFile();
+	}
+
+	public boolean isDirectory() {
+		return this.file.isDirectory();
 	}
 
 	public String getFileName() {
@@ -64,5 +76,43 @@ public class FileInfo {
 			return true;
 		}
 		return false;
+	}
+
+	private void getSubFileInfos(File currFile, List<String> fileNames) {
+		if (currFile.isFile()) {
+			fileNames.add(currFile.getAbsolutePath());
+		} else {
+			File[] subFiles = currFile.listFiles();
+			for (File subFile : subFiles) {
+				getSubFileInfos(subFile, fileNames);
+			}
+		}
+	}
+
+	public List<FileInfo> getSubFileInfos() {
+		List<String> fileNames = new ArrayList<String>();
+		getSubFileInfos(this.file, fileNames);
+
+		List<FileInfo> subFileInfos = new ArrayList<FileInfo>();
+		Path localPath = Paths.get(getFullFileName());
+		Path remotePath = Paths.get(getRemoteFile());
+		for (String fileName : fileNames) {
+			Path localFilePath = Paths.get(fileName);
+			// the case when it's a file, not a directory
+			if (localPath.getNameCount() == localFilePath.getNameCount()) {
+				subFileInfos.add(this);
+				break;
+			}
+			Path remoteFilePath = remotePath.resolve(localFilePath.subpath(localPath.getNameCount(), localFilePath.getNameCount()));
+			String remoteFileName = remoteFilePath.toString();
+			FileInfo subFileInfo = null;
+			if (this.isServer) {
+				subFileInfo = new FileInfo(fileName, remoteFileName, true);
+			} else {
+				subFileInfo = new FileInfo(remoteFileName, fileName, false);
+			}
+			subFileInfos.add(subFileInfo);
+		}
+		return subFileInfos;
 	}
 }
