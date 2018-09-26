@@ -71,8 +71,8 @@ public class Server {
 				System.out.println("[INFO  ] connection from client closed.");
 				connect();
 			} catch (IOException e) {
-				// e.printStackTrace();
 				System.err.println("[ERROR ] undetermined error.");
+				// e.printStackTrace();
 			}
 		}
 	}

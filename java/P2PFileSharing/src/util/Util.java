@@ -108,6 +108,10 @@ public class Util {
 			for (int i = 0; i < start; i++) {
 				// full fileName
 				String fileName = dis.readUTF();
+				// change windows path format to linux path format
+				if (System.getProperty("os.name").toLowerCase().startsWith("linux")) {
+					fileName = fileName.replace("\\", "/");
+				}
 				// filesize
 				long length = dis.readLong();
 				// System.out.println("[INFO] head saved.");
