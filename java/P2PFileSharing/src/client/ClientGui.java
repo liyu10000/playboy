@@ -187,6 +187,10 @@ public class ClientGui {
 		indexCol.setMinWidth(100);
 		indexCol.setMaxWidth(200);
 		indexCol.setCellRenderer(centerRenderer);
+		TableColumn nameCol = table.getColumnModel().getColumn(1);
+		nameCol.setPreferredWidth(150);
+		nameCol.setMinWidth(150);
+		nameCol.setMaxWidth(300);
 		JScrollPane scrollPane = new JScrollPane(table);
 		table.setFillsViewportHeight(true);
 		panelDown.add(scrollPane, BorderLayout.CENTER);
