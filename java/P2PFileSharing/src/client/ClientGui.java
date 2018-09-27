@@ -340,15 +340,19 @@ public class ClientGui {
 				}
 			} else if (rows.length == 0 && (s.equals("push") || s.equals("pull") || s.equals("delete"))) {
 				JOptionPane.showMessageDialog(frame, "no file choosed", "warning", JOptionPane.WARNING_MESSAGE);
-			} else if (connectStatus.getText().equals("connected") && (s.equals("push") || s.equals("pull"))) {
-				String signal;
-				if (s.equals("push")) {
-					signal = "client_to_server";
+			} else if (s.equals("push") || s.equals("pull")) {
+				if (connectStatus.getText().equals("disconnected")) {
+					JOptionPane.showMessageDialog(frame, "remote not connected", "warning", JOptionPane.WARNING_MESSAGE);
 				} else {
-					signal = "server_to_client";
-				}
-				for (int i = 0; i < rows.length; i++) {
-					clientCase.shuttle(signal, fileInfoList.get(rows[i]));
+					String signal;
+					if (s.equals("push")) {
+						signal = "client_to_server";
+					} else {
+						signal = "server_to_client";
+					}
+					for (int i = 0; i < rows.length; i++) {
+						clientCase.shuttle(signal, fileInfoList.get(rows[i]));
+					}
 				}
 			} else if (s.equals("delete")) {
 				removeRows(rows);
