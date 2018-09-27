@@ -11,11 +11,11 @@
  - file list: the list of files or folders to push/pull.
  - control:
 <pre>
-	push: upload from local to remote.
-	pull: download from remote to local.
-	delete: delete file/folder entry.
-	add: add new file/folder entry. A pop up window will appear for inputs.
-	save info: save host/port and file/folder entries to local csv files, so that it will be loaded next time at GUI startup.
+push: upload from local to remote.
+pull: download from remote to local.
+delete: delete file/folder entry.
+add: add new file/folder entry. A pop up window will appear for inputs, need to input full path name here.
+save info: save host/port and file/folder entries to local csv files, so that it will be loaded next time at GUI startup.
 </pre>
 
 ### dataflow
