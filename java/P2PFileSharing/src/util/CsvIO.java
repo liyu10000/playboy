@@ -42,9 +42,11 @@ public class CsvIO {
 		try {
 			fileWriter = new FileWriter(fileName);
 			for (ArrayList<String> row : data) {
-				for (String token : row) {
-					fileWriter.append(token);
-					fileWriter.append(DELIMITER);
+				for (int i = 0; i < row.size(); i++) {
+					fileWriter.append(row.get(i));
+					if (i != row.size()-1) {
+						fileWriter.append(DELIMITER);
+					}
 				}
 				fileWriter.append(SEPARATOR);
 			}

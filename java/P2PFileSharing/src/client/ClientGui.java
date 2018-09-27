@@ -46,6 +46,8 @@ public class ClientGui {
 	private JTextField hostText;
 	private JTextField portText;
 	private JLabel connectStatus;
+	private String hisHost;
+	private String hisPort;
 
 	public ClientGui() {
 		loadData();
@@ -63,20 +65,42 @@ public class ClientGui {
 	}
 
 	private void loadData() {
+		// load host/port and set text to text field
+		File hostFile = new File((new File(System.getProperty("user.dir"))).getParentFile(), "res"+File.separator+"host.csv");
+		if (!hostFile.exists()) {
+			this.hisHost = "127.0.0.1";
+			this.hisPort = "9999";
+		} else {
+			ArrayList<ArrayList<String>> hostPort = CsvIO.readCsv(hostFile.getAbsolutePath());
+			this.hisHost = hostPort.get(0).get(0);
+			this.hisPort = hostPort.get(0).get(1);
+		}
+
+		// load file lists and show on table
 		this.columnNames = new String[] {"index", "name", "server (remote)", "client (local)"};
 		this.fileInfoList = new ArrayList<FileInfo>();
-		File csvFile = new File((new File(System.getProperty("user.dir"))).getParentFile(), "res"+File.separator+"fileList.csv");
-		if (!csvFile.exists()) {
+		File dataFile = new File((new File(System.getProperty("user.dir"))).getParentFile(), "res"+File.separator+"fileList.csv");
+		if (!dataFile.exists()) {
 			this.fileInfoList.add(new FileInfo("sample file on remote", "sample file on local", false));
-			return;
-		}
-		ArrayList<ArrayList<String>> data = CsvIO.readCsv(csvFile.getAbsolutePath());
-		for (ArrayList<String> row : data) {
-			this.fileInfoList.add(new FileInfo(row.get(2), row.get(3), false));
+		} else {
+			ArrayList<ArrayList<String>> data = CsvIO.readCsv(dataFile.getAbsolutePath());
+			for (ArrayList<String> row : data) {
+				this.fileInfoList.add(new FileInfo(row.get(2), row.get(3), false));
+			}
 		}
 	}
 
 	private void saveData() {
+		// save host and port information into csv
+		ArrayList<ArrayList<String>> hostPort = new ArrayList<ArrayList<String>>();
+		ArrayList<String> line = new ArrayList<String>();
+		line.add(hostText.getText());
+		line.add(portText.getText());
+		hostPort.add(line);
+		File hostFile = new File((new File(System.getProperty("user.dir"))).getParentFile(), "res"+File.separator+"host.csv");
+		CsvIO.writeCsv(hostFile.getAbsolutePath(), hostPort);
+
+		// save file lists into csv
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
 		for (int i = 0; i < table.getRowCount(); i++) {
 			ArrayList<String> row = new ArrayList<String>();
@@ -85,8 +109,8 @@ public class ClientGui {
 			}
 			data.add(row);
 		}
-		File csvFile = new File((new File(System.getProperty("user.dir"))).getParentFile(), "res"+File.separator+"fileList.csv");
-		CsvIO.writeCsv(csvFile.getAbsolutePath(), data);
+		File dataFile = new File((new File(System.getProperty("user.dir"))).getParentFile(), "res"+File.separator+"fileList.csv");
+		CsvIO.writeCsv(dataFile.getAbsolutePath(), data);
 	}
 
 	private void guiSetup() {
@@ -109,7 +133,7 @@ public class ClientGui {
 		cPanelUp.weightx = 10;
 		panelUp.add(hostMark, cPanelUp);
 		hostText = new JTextField();
-		hostText.setText("127.0.0.1");
+		hostText.setText(hisHost);
 		cPanelUp.fill = GridBagConstraints.HORIZONTAL;
 		cPanelUp.anchor = GridBagConstraints.LINE_START;
 		cPanelUp.insets = new Insets(0,0,0,0);
@@ -126,7 +150,7 @@ public class ClientGui {
 		cPanelUp.weightx = 10;
 		panelUp.add(portMark, cPanelUp);
 		portText = new JTextField();
-		portText.setText("9999");
+		portText.setText(hisPort);
 		cPanelUp.fill = GridBagConstraints.HORIZONTAL;
 		cPanelUp.anchor = GridBagConstraints.LINE_START;
 		cPanelUp.insets = new Insets(0,0,0,0);
@@ -190,7 +214,7 @@ public class ClientGui {
 		TableColumn nameCol = table.getColumnModel().getColumn(1);
 		nameCol.setPreferredWidth(150);
 		nameCol.setMinWidth(150);
-		nameCol.setMaxWidth(300);
+		nameCol.setMaxWidth(400);
 		JScrollPane scrollPane = new JScrollPane(table);
 		table.setFillsViewportHeight(true);
 		panelDown.add(scrollPane, BorderLayout.CENTER);
@@ -219,6 +243,9 @@ public class ClientGui {
 		JButton add = new MyButton("add");
 		cPanelRight.gridy = 3;
 		panelRight.add(add, cPanelRight);
+		JButton save = new MyButton("save info");
+		cPanelRight.gridy = 4;
+		panelRight.add(save, cPanelRight);
 		c.gridx = 1; c.gridy = 1;
 		c.gridwidth = 1; c.gridheight = 1;
 		c.weightx = 5; c.weighty =85;
@@ -256,12 +283,32 @@ public class ClientGui {
 
 	private FileInfo getNewFileInfo() {
 		JPanel inputPanel = new JPanel();
-		JTextField serverFile = new JTextField(20);
-		JTextField clientFile = new JTextField(20);
-		inputPanel.add(new JLabel("server file name:"));
-		inputPanel.add(serverFile);
-		inputPanel.add(new JLabel("client file name:"));
-		inputPanel.add(clientFile);
+		inputPanel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		JLabel serverMark = new JLabel("server (remote) file/folder name:");
+		c.fill = GridBagConstraints.NONE;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.insets = new Insets(0, 0, 0, 10);
+		c.gridx = 0; c.gridy = 0;
+		inputPanel.add(serverMark, c);
+		JTextField serverFile = new JTextField(30);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.CENTER;
+		c.insets = new Insets(0, 0, 0, 0);
+		c.gridx = 1; c.gridy = 0;
+		inputPanel.add(serverFile, c);
+		JLabel clientMark = new JLabel("client (local) file/folder name:");
+		c.fill = GridBagConstraints.NONE;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.insets = new Insets(0, 0, 0, 10);
+		c.gridx = 0; c.gridy = 1;
+		inputPanel.add(clientMark, c);
+		JTextField clientFile = new JTextField(30);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.CENTER;
+		c.insets = new Insets(0, 0, 0, 0);
+		c.gridx = 1; c.gridy = 1;
+		inputPanel.add(clientFile, c);
 
 		int option = JOptionPane.showConfirmDialog(frame, inputPanel, "Input server and client file path name", JOptionPane.OK_CANCEL_OPTION);
 		if (option == JOptionPane.OK_OPTION) {
@@ -287,7 +334,6 @@ public class ClientGui {
 					connectStatus.setText("connected");
 				}
 			} else if (s.equals("disconnect")) {
-				saveData();
 				if (connectStatus.getText().equals("connected")) {
 					closeClient();
 					connectStatus.setText("disconnected");
@@ -311,6 +357,8 @@ public class ClientGui {
 				if (fileInfo != null) {
 					appendRow(fileInfo);
 				}
+			} else if (s.equals("save info")) {
+				saveData();
 			}
 		}
 	}
