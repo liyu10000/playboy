@@ -1,6 +1,15 @@
 *.zip
 *.pyc
 .ipynb_checkpoints/
+
+*.jpg
+*.png
+*.bmp
+*.txt
 *.pickle
+
 *.class
 java/P2PFileSharing/res
+
+courses/cs231n/assignment1/cs231n/datasets/cifar-10-batches-py
+courses/cs231n/assignment2/cs231n/datasets/cifar-10-batches-py
