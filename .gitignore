@@ -6,10 +6,18 @@
 *.png
 *.bmp
 *.txt
+*.pdf
 *.pickle
 
 *.class
 java/P2PFileSharing/res
+
+*.sh
+*.npz
+*.zip
+*.rar
+*.tar
+*.tar.gz
 
 courses/cs231n/assignment1/cs231n/datasets/cifar-10-batches-py
 courses/cs231n/assignment2/cs231n/datasets/cifar-10-batches-py
