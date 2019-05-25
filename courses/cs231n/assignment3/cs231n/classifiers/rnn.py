@@ -231,12 +231,17 @@ class CaptioningRNN(object):
         # a loop.                                                                 #
         ###########################################################################
         h, _ = affine_forward(features, W_proj, b_proj)
+        if self.cell_type == 'lstm':
+            c = np.zeros_like(h)
         w = self._start * np.ones(N).astype(np.int8)
         for t in range(max_length):
             # word embedding
             x, _ = word_embedding_forward(w, W_embed)
             # make a step
-            h, _ = rnn_step_forward(x, h, Wx, Wh, b)
+            if self.cell_type == 'rnn':
+                h, _ = rnn_step_forward(x, h, Wx, Wh, b)
+            else:
+                h, c, _ = lstm_step_forward(x, h, c, Wx, Wh, b)
             # compute scores
             scores, _ = affine_forward(h, W_vocab, b_vocab)
             # select word
