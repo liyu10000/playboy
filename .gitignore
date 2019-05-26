@@ -8,6 +8,7 @@
 *.txt
 *.xml
 *.pdf
+*.pkl
 *.pickle
 
 *.class
@@ -32,3 +33,4 @@ courses/cs231n/assignment3/cs231n/datasets/imagenet_val_25.npz
 courses/cs231n/assignment3/cs231n/datasets/squeezenet.ckpt.data-00000-of-00001
 courses/cs231n/assignment3/cs231n/datasets/squeezenet.ckpt.index
 courses/cs231n/assignment3/cs231n/datasets/squeezenet.ckpt.meta
+courses/cs231n/assignment3/cs231n/datasets/MNIST_data
