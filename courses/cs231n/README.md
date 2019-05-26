@@ -1,0 +1,1 @@
+course website: http://cs231n.stanford.edu/2017/syllabus.html
