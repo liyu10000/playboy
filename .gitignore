@@ -21,12 +21,13 @@ java/P2PFileSharing/res
 *.tar
 *.tar.gz
 
-courses/algorithms/week1/percolation/.idea
-courses/algorithms/week1/percolation/.lift
-courses/algorithms/week1/percolation/Algorithms, Part I.iml
-courses/algorithms/week1/percolation/CREDITS
+*.idea
+*.lift
+*.iml
+*CREDITS
 
 courses/cs229/MachineLearning
+courses/cs229/slides/ProblemSets
 
 courses/cs231n/assignment1/cs231n/datasets/cifar-10-batches-py
 courses/cs231n/assignment2/cs231n/datasets/cifar-10-batches-py
