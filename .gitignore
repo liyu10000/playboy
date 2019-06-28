@@ -34,10 +34,11 @@ java/P2PFileSharing/res
 *.iml
 *CREDITS
 
+courses/cs224n/codes/glove.6B
+courses/cs224n/codes/GloVe-1.2
+
 courses/cs229/MachineLearning
 courses/cs229/slides/ProblemSets
-
-courses/cs224n/codes/glove.6B
 
 courses/cs231n/assignment1/cs231n/datasets/cifar-10-batches-py
 courses/cs231n/assignment2/cs231n/datasets/cifar-10-batches-py
