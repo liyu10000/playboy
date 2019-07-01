@@ -1,5 +1,6 @@
 *.zip
 *.pyc
+__init__.py
 .ipynb_checkpoints/
 
 *.jpg
@@ -24,18 +25,22 @@ java/P2PFileSharing/res
 
 *.sh
 *.npz
+*.npy
 *.zip
 *.rar
 *.tar
 *.tar.gz
+*.DS_Store
 
 *.idea
 *.lift
 *.iml
+*.yml
 *CREDITS
 
 courses/cs224n/codes/glove.6B
 courses/cs224n/codes/GloVe-1.2
+courses/cs224n/assignments/a2/utils/datasets/
 
 courses/cs229/MachineLearning
 courses/cs229/slides/ProblemSets
