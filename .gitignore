@@ -40,7 +40,9 @@ java/P2PFileSharing/res
 
 courses/cs224n/codes/glove.6B
 courses/cs224n/codes/GloVe-1.2
-courses/cs224n/assignments/a2/utils/datasets/
+courses/cs224n/assignments/a2/utils/datasets
+courses/cs224n/assignments/a3/data
+courses/cs224n/assignments/a3/results
 
 courses/cs229/MachineLearning
 courses/cs229/slides/ProblemSets
