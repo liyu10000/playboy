@@ -35,7 +35,11 @@ java/P2PFileSharing/res
 *.lift
 *.iml
 *.yml
+*.json
 *CREDITS
+
+*.en
+*.es
 
 courses/cs224n/codes/glove.6B
 courses/cs224n/codes/GloVe-1.2
