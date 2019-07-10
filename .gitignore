@@ -40,6 +40,8 @@ java/P2PFileSharing/res
 
 *.en
 *.es
+*.bin
+*.bin.optim
 
 courses/cs224n/codes/glove.6B
 courses/cs224n/codes/GloVe-1.2
