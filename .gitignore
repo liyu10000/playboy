@@ -12,6 +12,7 @@ __init__.py
 *.pickle
 *.mp4
 
+*.csv
 *.doc
 *.docx
 *.xls
@@ -42,6 +43,8 @@ java/P2PFileSharing/res
 *.es
 *.bin
 *.bin.optim
+*.marshal
+*.marshal.3
 
 courses/cs224n/codes/glove.6B
 courses/cs224n/codes/GloVe-1.2
