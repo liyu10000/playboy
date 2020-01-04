@@ -20,9 +20,11 @@ class DoubleConv(nn.Module):
 
 
 class UNet(nn.Module):
-    def __init__(self, num_channels=1, num_classes=1):
+    def __init__(self, n_channels=1, n_classes=1):
         super().__init__()
-        self.dc1 = DoubleConv(num_channels, 16)
+        self.n_channels = n_channels
+        self.n_classes = n_classes
+        self.dc1 = DoubleConv(n_channels, 16)
         self.mp1 = nn.MaxPool2d(2, stride=2)
         self.dc2 = DoubleConv(16, 32)
         self.mp2 = nn.MaxPool2d(2, stride=2)
@@ -39,7 +41,7 @@ class UNet(nn.Module):
         self.dc8 = DoubleConv(64, 32)
         self.up4 = nn.ConvTranspose2d(32, 16, kernel_size=2, stride=2)
         self.dc9 = DoubleConv(32, 16)
-        self.out = nn.Conv2d(16, num_classes, kernel_size=1)
+        self.out = nn.Conv2d(16, n_classes, kernel_size=1)
 
     def forward(self, x):
         # contraction path
@@ -73,6 +75,6 @@ class UNet(nn.Module):
 
 if __name__ == '__main__':
     i = torch.randn(1, 3, 128, 128)
-    unet = UNet(num_channels=3, num_classes=1)
+    unet = UNet(n_channels=3, n_classes=1)
     o = unet(i)
     print(o.size())
