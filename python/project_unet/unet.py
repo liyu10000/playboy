@@ -20,9 +20,9 @@ class DoubleConv(nn.Module):
 
 
 class UNet(nn.Module):
-    def __init__(self, num_classes=2):
+    def __init__(self, num_channels=1, num_classes=1):
         super().__init__()
-        self.dc1 = DoubleConv(3, 16)
+        self.dc1 = DoubleConv(num_channels, 16)
         self.mp1 = nn.MaxPool2d(2, stride=2)
         self.dc2 = DoubleConv(16, 32)
         self.mp2 = nn.MaxPool2d(2, stride=2)
@@ -73,6 +73,6 @@ class UNet(nn.Module):
 
 if __name__ == '__main__':
     i = torch.randn(1, 3, 128, 128)
-    unet = UNet(num_classes=1)
+    unet = UNet(num_channels=3, num_classes=1)
     o = unet(i)
     print(o.size())
