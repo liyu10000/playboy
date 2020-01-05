@@ -26,7 +26,7 @@ class BasicDataset(Dataset):
         if resize:
             img = cv2.resize(img, (W, H))
         # scale down
-        img /= 255
+        img = img / 255
         # expand dimension
         if len(img.shape) == 2:
             img = np.expand_dims(img, axis=2)
@@ -92,7 +92,7 @@ def train(net, dir_img, dir_mask, dir_checkpoint,
                 pbar.update(imgs.shape[0])
 
         val_score = evaluate(net, val_loader, device, n_val)
-        print(f'epoch {epoch+1} val score: {val_score}')
+        print(f'Epoch {epoch+1} val score: {val_score}')
 
         if save_cp:
             os.makedirs(dir_checkpoint, exist_ok=True)
@@ -102,9 +102,9 @@ def train(net, dir_img, dir_mask, dir_checkpoint,
 
 if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    net = UNet(n_channels=3, n_classes=1)
+    net = UNet(n_filters=32, n_channels=3, n_classes=1)
     # faster convolutions, but more memory
-    cudnn.benchmark = True
+    torch.backends.cudnn.benchmark = True
 
     train(net=net,
           dir_img='./tgs_salt_identification_challenge/train/images',
