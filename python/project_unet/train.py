@@ -9,6 +9,7 @@ from torch import optim
 from torch.utils.data import Dataset, DataLoader, random_split
 from torchvision import transforms, utils
 from unet import UNet
+from eval import evaluate
 
 
 class BasicDataset(Dataset):
@@ -46,32 +47,6 @@ class BasicDataset(Dataset):
 
         sample = {'image':img, 'mask':mask}
         return sample
-
-
-def evaluate(net, loader, device, n_val):
-    net.eval()
-    if net.n_classes > 1:
-        criterion = nn.CrossEntropyLoss()
-    else:
-        criterion = nn.BCEWithLogitsLoss()
-
-    val_loss = 0
-    with tqdm(total=n_val, desc='Validation', unit='img', leave=False) as pbar:
-        for batch in loader:
-            imgs = batch['image']
-            masks = batch['mask']
-
-            imgs = imgs.to(device=device, dtype=torch.float32)
-            mask_type = torch.float32 if net.n_classes == 1 else torch.long
-            masks = masks.to(device=device, dtype=mask_type)
-
-            masks_pred = net(imgs)
-            loss = criterion(masks_pred, masks)
-            val_loss += loss.item()
-            pbar.set_postfix(**{'loss (batch)': loss.item()})
-            pbar.update(imgs.shape[0])
-
-    return val_loss
 
 
 def train(net, dir_img, dir_mask, dir_checkpoint, 
@@ -116,8 +91,8 @@ def train(net, dir_img, dir_mask, dir_checkpoint,
 
                 pbar.update(imgs.shape[0])
 
-        val_loss = evaluate(net, val_loader, device, n_val)
-        print(f'val score: {val_loss}')
+        val_score = evaluate(net, val_loader, device, n_val)
+        print(f'epoch {epoch+1} val score: {val_score}')
 
         if save_cp:
             os.makedirs(dir_checkpoint, exist_ok=True)
@@ -136,7 +111,7 @@ if __name__ == '__main__':
           dir_mask='./tgs_salt_identification_challenge/train/masks',
           dir_checkpoint='./tgs_salt_identification_challenge/checkpoints',
           device=device,
-          epochs=2,
+          epochs=20,
           batch_size=128,
           lr=0.05,
           val_percent=0.05,
