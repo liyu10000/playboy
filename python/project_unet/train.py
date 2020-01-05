@@ -24,6 +24,8 @@ class BasicDataset(Dataset):
         # resize
         if resize:
             img = cv2.resize(img, (W, H))
+        # scale down
+        img /= 255
         # expand dimension
         if len(img.shape) == 2:
             img = np.expand_dims(img, axis=2)
@@ -127,7 +129,7 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     net = UNet(n_channels=3, n_classes=1)
     # faster convolutions, but more memory
-    # cudnn.benchmark = True
+    cudnn.benchmark = True
 
     train(net=net,
           dir_img='./tgs_salt_identification_challenge/train/images',
