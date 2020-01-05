@@ -59,7 +59,7 @@ def train(net, dir_img, dir_mask, dir_checkpoint,
     train_loader = DataLoader(train, batch_size=batch_size, shuffle=True, num_workers=8, pin_memory=True)
     val_loader = DataLoader(val, batch_size=batch_size, shuffle=False, num_workers=8, pin_memory=True)
 
-    optimizer = optim.RMSprop(net.parameters(), lr=lr, weight_decay=1e-6)
+    optimizer = optim.RMSprop(net.parameters(), lr=lr, weight_decay=1e-8)
     if net.n_classes > 1:
         criterion = nn.CrossEntropyLoss()
     else:
@@ -72,7 +72,7 @@ def train(net, dir_img, dir_mask, dir_checkpoint,
 
         epoch_loss = 0
         with tqdm(total=n_train, desc=f'Epoch {epoch + 1}/{epochs}', unit='img') as pbar:
-            for batch in train_loader:
+            for i,batch in enumerate(train_loader):
                 imgs = batch['image']
                 masks_true = batch['mask']
 
@@ -83,7 +83,7 @@ def train(net, dir_img, dir_mask, dir_checkpoint,
                 masks_pred = net(imgs)
                 loss = criterion(masks_pred, masks_true)
                 epoch_loss += loss.item()
-                pbar.set_postfix(**{'loss (batch)': loss.item()})
+                pbar.set_postfix(**{'loss': '{:.3f}'.format(epoch_loss/(i+1))})
 
                 optimizer.zero_grad()
                 loss.backward()
@@ -92,7 +92,7 @@ def train(net, dir_img, dir_mask, dir_checkpoint,
                 pbar.update(imgs.shape[0])
 
         val_score = evaluate(net, val_loader, device, n_val)
-        print(f'Epoch {epoch+1} val score: {val_score}')
+        print('Epoch {} val score: {:.3f}'.format(epoch+1, val_score))
 
         if save_cp:
             os.makedirs(dir_checkpoint, exist_ok=True)
@@ -111,10 +111,10 @@ if __name__ == '__main__':
           dir_mask='./tgs_salt_identification_challenge/train/masks',
           dir_checkpoint='./tgs_salt_identification_challenge/checkpoints',
           device=device,
-          epochs=20,
+          epochs=5,
           batch_size=128,
-          lr=0.05,
+          lr=0.01,
           val_percent=0.05,
-          save_cp=True
+          save_cp=False
           )
 

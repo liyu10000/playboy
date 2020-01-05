@@ -64,9 +64,9 @@ def evaluate(net, loader, device, n_val):
             for mask_true, mask_pred in zip(masks_true, masks_pred):
                 mask_true = (mask_true > 0.5).float()
                 if net.n_classes > 1:
-                    tot += F.cross_entropy(mask_true.unsqueeze(dim=0), mask_true.unsqueeze(dim=0)).item()
+                    tot += F.cross_entropy(mask_pred.unsqueeze(dim=0), mask_true.unsqueeze(dim=0)).item()
                 else:
-                    tot += dice_coeff(mask_true, mask_true.squeeze(dim=1)).item()
+                    tot += dice_coeff(mask_pred, mask_true.squeeze(dim=1)).item()
             pbar.update(imgs.shape[0])
 
     return tot / n_val
