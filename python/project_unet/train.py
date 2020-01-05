@@ -135,8 +135,8 @@ if __name__ == '__main__':
           dir_checkpoint='./tgs_salt_identification_challenge/checkpoints',
           device=device,
           epochs=2,
-          batch_size=4,
-          lr=0.1,
+          batch_size=128,
+          lr=0.05,
           val_percent=0.05,
           save_cp=True
           )
