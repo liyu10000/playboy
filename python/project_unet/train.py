@@ -74,14 +74,14 @@ def train(net, dir_img, dir_mask, dir_checkpoint,
         with tqdm(total=n_train, desc=f'Epoch {epoch + 1}/{epochs}', unit='img') as pbar:
             for batch in train_loader:
                 imgs = batch['image']
-                masks = batch['mask']
+                masks_true = batch['mask']
 
                 imgs = imgs.to(device=device, dtype=torch.float32)
                 mask_type = torch.float32 if net.n_classes == 1 else torch.long
-                masks = masks.to(device=device, dtype=mask_type)
+                masks_true = masks_true.to(device=device, dtype=mask_type)
 
                 masks_pred = net(imgs)
-                loss = criterion(masks_pred, masks)
+                loss = criterion(masks_pred, masks_true)
                 epoch_loss += loss.item()
                 pbar.set_postfix(**{'loss (batch)': loss.item()})
 

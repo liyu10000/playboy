@@ -53,20 +53,20 @@ def evaluate(net, loader, device, n_val):
     with tqdm(total=n_val, desc='Validation', unit='img', leave=False) as pbar:
         for batch in loader:
             imgs = batch['image']
-            masks = batch['mask']
+            masks_true = batch['mask']
 
             imgs = imgs.to(device=device, dtype=torch.float32)
             mask_type = torch.float32 if net.n_classes == 1 else torch.long
-            masks = masks.to(device=device, dtype=mask_type)
+            masks_true = masks_true.to(device=device, dtype=mask_type)
 
-            mask_pred = net(imgs)
+            masks_pred = net(imgs)
 
-            for mask, pred in zip(masks, mask_pred):
-                pred = (pred > 0.5).float()
+            for mask_true, mask_pred in zip(masks_true, masks_pred):
+                mask_true = (mask_true > 0.5).float()
                 if net.n_classes > 1:
-                    tot += F.cross_entropy(pred.unsqueeze(dim=0), mask.unsqueeze(dim=0)).item()
+                    tot += F.cross_entropy(mask_true.unsqueeze(dim=0), mask_true.unsqueeze(dim=0)).item()
                 else:
-                    tot += dice_coeff(pred, mask.squeeze(dim=1)).item()
+                    tot += dice_coeff(mask_true, mask_true.squeeze(dim=1)).item()
             pbar.update(imgs.shape[0])
 
     return tot / n_val
