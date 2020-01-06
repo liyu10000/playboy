@@ -39,7 +39,7 @@ def dice_coeff(input, target):
         s = torch.FloatTensor(1).zero_()
 
     for i, c in enumerate(zip(input, target)):
-        s = s + DiceCoeff().forward(c[0], c[1])
+        s += DiceCoeff().forward(c[0], c[1])
 
     return s / (i + 1)
 

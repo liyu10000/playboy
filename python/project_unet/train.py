@@ -39,7 +39,7 @@ class BasicDataset(Dataset):
         idx = self.ids[i]
         img_file = os.path.join(self.dir_img, idx+'.png')
         mask_file = os.path.join(self.dir_mask, idx+'.png')
-        img = cv2.imread(img_file, 1)
+        img = cv2.imread(img_file, 0)  # input image is in grayscale
         mask = cv2.imread(mask_file, 0)
 
         img = self.transform(img, True, 128, 128)
@@ -50,7 +50,7 @@ class BasicDataset(Dataset):
 
 
 def train(model, dir_img, dir_mask, dir_checkpoint, 
-          device, epochs=5, batch_size=4, lr=0.1, val_percent=0.1, save_cp=False, resume_from=None):
+          device, epochs=5, batch_size=4, lr=0.1, val_percent=0.1, save_cp=False, resume_from=0):
     dataset = BasicDataset(dir_img, dir_mask)
 
     n_val = int(len(dataset) * val_percent)
@@ -67,11 +67,11 @@ def train(model, dir_img, dir_mask, dir_checkpoint,
 
     # resume from a checkpoint
     epoch = 0
-    if resume_from is not None:
-        resume_point = os.path.join(dir_checkpoint, f'epoch{resume_from}.pth')
-        if os.path.isfile(resume_point):
-            model.load_state_dict(torch.load(resume_point))
-            epoch = resume_point
+    if resume_from > 0:
+        model_path = os.path.join(dir_checkpoint, f'epoch{resume_from}.pth')
+        if os.path.isfile(model_path):
+            model.load_state_dict(torch.load(model_path))
+            epoch = resume_from
 
     model.to(device=device)
 
@@ -113,7 +113,7 @@ def train(model, dir_img, dir_mask, dir_checkpoint,
 
 if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model = UNet(n_filters=32, n_channels=3, n_classes=1)
+    model = UNet(n_filters=32, n_channels=1, n_classes=1)
     # faster convolutions, but more memory
     torch.backends.cudnn.benchmark = True
 
@@ -122,11 +122,11 @@ if __name__ == '__main__':
           dir_mask='./tgs_salt_identification_challenge/train/masks',
           dir_checkpoint='./tgs_salt_identification_challenge/checkpoints',
           device=device,
-          epochs=5,
+          epochs=10,
           batch_size=128,
           lr=0.01,
           val_percent=0.05,
           save_cp=False,
-          resume_from=None
+          resume_from=0
           )
 
