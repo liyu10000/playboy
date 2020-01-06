@@ -45,9 +45,9 @@ def dice_coeff(input, target):
 
 
 
-def evaluate(net, loader, device, n_val):
+def evaluate(model, loader, device, n_val):
     """Evaluation without the densecrf with the dice coefficient"""
-    net.eval()
+    model.eval()
     tot = 0
 
     with tqdm(total=n_val, desc='Validation', unit='img', leave=False) as pbar:
@@ -56,14 +56,14 @@ def evaluate(net, loader, device, n_val):
             masks_true = batch['mask']
 
             imgs = imgs.to(device=device, dtype=torch.float32)
-            mask_type = torch.float32 if net.n_classes == 1 else torch.long
+            mask_type = torch.float32 if model.n_classes == 1 else torch.long
             masks_true = masks_true.to(device=device, dtype=mask_type)
 
-            masks_pred = net(imgs)
+            masks_pred = model(imgs)
 
             for mask_true, mask_pred in zip(masks_true, masks_pred):
                 mask_true = (mask_true > 0.5).float()
-                if net.n_classes > 1:
+                if model.n_classes > 1:
                     tot += F.cross_entropy(mask_pred.unsqueeze(dim=0), mask_true.unsqueeze(dim=0)).item()
                 else:
                     tot += dice_coeff(mask_pred, mask_true.squeeze(dim=1)).item()
