@@ -1,1 +1,3 @@
 ## UNet: Semantic Segmentation with PyTorch
+
+This repo contains a PyTorch implementation of UNet and several modifications in training, for the task of salt identification hosted on [Kaggle](https://www.kaggle.com/c/tgs-salt-identification-challenge). During the development, I referred to two sources: the [Kaggle kernel with score 0.854](https://www.kaggle.com/meaninglesslives/getting-0-87-on-private-lb-using-kaggle-kernel) and the [PyTorch implementation of UNet](https://github.com/milesial/Pytorch-UNet).
