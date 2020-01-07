@@ -9,7 +9,7 @@ from torch import optim
 from torch.utils.data import Dataset, DataLoader, random_split
 from torchvision import transforms, utils
 from unet import UNet
-from eval import evaluate
+from eval import bce_dice_loss, evaluate
 
 
 class BasicDataset(Dataset):
@@ -60,10 +60,10 @@ def train(model, dir_img, dir_mask, dir_checkpoint,
     val_loader = DataLoader(val, batch_size=batch_size, shuffle=False, num_workers=8, pin_memory=True)
 
     optimizer = optim.RMSprop(model.parameters(), lr=lr, weight_decay=1e-8)
-    if model.n_classes > 1:
-        criterion = nn.CrossEntropyLoss()
-    else:
-        criterion = nn.BCEWithLogitsLoss()
+#     if model.n_classes > 1:
+#         ce_loss = nn.CrossEntropyLoss()
+#     else:
+#         ce_loss = nn.BCEWithLogitsLoss()
 
     # resume from a checkpoint
     epoch = 0
@@ -89,7 +89,7 @@ def train(model, dir_img, dir_mask, dir_checkpoint,
                 masks_true = masks_true.to(device=device, dtype=mask_type)
 
                 masks_pred = model(imgs)
-                loss = criterion(masks_pred, masks_true)
+                loss = bce_dice_loss(masks_pred, masks_true)
                 epoch_loss += loss.item()
                 pbar.set_postfix(**{'loss': '{:.3f}'.format(epoch_loss/(i+1))})
 
@@ -122,9 +122,9 @@ if __name__ == '__main__':
           dir_mask='./tgs_salt_identification_challenge/train/masks',
           dir_checkpoint='./tgs_salt_identification_challenge/checkpoints',
           device=device,
-          epochs=10,
+          epochs=50,
           batch_size=128,
-          lr=0.01,
+          lr=0.05,
           val_percent=0.05,
           save_cp=False,
           resume_from=0

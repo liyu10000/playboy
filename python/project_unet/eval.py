@@ -1,6 +1,7 @@
 import torch
-from torch.autograd import Function
+import torch.nn as nn
 import torch.nn.functional as F
+from torch.autograd import Function
 from tqdm import tqdm
 
 
@@ -16,33 +17,52 @@ class DiceCoeff(Function):
         t = (2 * self.inter.float() + eps) / self.union.float()
         return t
 
-    # This function has only a single output, so it gets only one gradient
-    def backward(self, grad_output):
+#     # This function has only a single output, so it gets only one gradient
+#     def backward(self, grad_output):
 
-        input, target = self.saved_variables
-        grad_input = grad_target = None
+#         input, target = self.saved_variables
+#         grad_input = grad_target = None
 
-        if self.needs_input_grad[0]:
-            grad_input = grad_output * 2 * (target * self.union - self.inter) \
-                         / (self.union * self.union)
-        if self.needs_input_grad[1]:
-            grad_target = None
+#         if self.needs_input_grad[0]:
+#             grad_input = grad_output * 2 * (target * self.union - self.inter) \
+#                          / (self.union * self.union)
+#         if self.needs_input_grad[1]:
+#             grad_target = None
 
-        return grad_input, grad_target
+#         return grad_input, grad_target
 
 
-def dice_coeff(input, target):
+def dice_coeff(input, target, thres=0.5):
+    """Dice coeff for batches"""
     """Dice coeff for batches"""
     if input.is_cuda:
         s = torch.FloatTensor(1).cuda().zero_()
     else:
         s = torch.FloatTensor(1).zero_()
 
-    for i, c in enumerate(zip(input, target)):
-        s += DiceCoeff().forward(c[0], c[1])
-
+    for i, (ip, tg) in enumerate(zip(input, target)):
+        ip = (ip > thres).float()
+        s += DiceCoeff().forward(ip, tg)
+        
     return s / (i + 1)
 
+
+def dice_loss(input, target, thres=0.5):
+    """Dice coeff for batches"""
+    if input.is_cuda:
+        s = torch.FloatTensor(1).cuda().zero_()
+    else:
+        s = torch.FloatTensor(1).zero_()
+
+    for i, (ip, tg) in enumerate(zip(input, target)):
+        ip = (ip > thres).float()
+        s += DiceCoeff().forward(ip, tg)
+
+    return 1. - s / (i + 1)
+
+
+def bce_dice_loss(input, target):
+    return nn.BCEWithLogitsLoss()(input, target) + dice_loss(input, target)
 
 
 def evaluate(model, loader, device, n_val):
@@ -51,7 +71,7 @@ def evaluate(model, loader, device, n_val):
     tot = 0
 
     with tqdm(total=n_val, desc='Validation', unit='img', leave=False) as pbar:
-        for batch in loader:
+        for i, batch in enumerate(loader):
             imgs = batch['image']
             masks_true = batch['mask']
 
@@ -60,13 +80,16 @@ def evaluate(model, loader, device, n_val):
             masks_true = masks_true.to(device=device, dtype=mask_type)
 
             masks_pred = model(imgs)
+            
+            tot += bce_dice_loss(masks_pred, masks_true).item()
+#             tot += dice_loss(masks_pred, masks_true).item()
 
-            for mask_true, mask_pred in zip(masks_true, masks_pred):
-                mask_true = (mask_true > 0.5).float()
-                if model.n_classes > 1:
-                    tot += F.cross_entropy(mask_pred.unsqueeze(dim=0), mask_true.unsqueeze(dim=0)).item()
-                else:
-                    tot += dice_coeff(mask_pred, mask_true.squeeze(dim=1)).item()
+#             for mask_true, mask_pred in zip(masks_true, masks_pred):
+#                 mask_pred = (mask_pred > 0.5).float()
+#                 if model.n_classes > 1:
+#                     tot += F.cross_entropy(mask_pred.unsqueeze(dim=0), mask_true.unsqueeze(dim=0)).item()
+#                 else:
+#                     tot += dice_coeff(mask_pred, mask_true).item()
             pbar.update(imgs.shape[0])
 
-    return tot / n_val
+    return tot / (i + 1)
