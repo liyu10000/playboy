@@ -6,47 +6,12 @@ import torch.nn.functional as F
 import numpy as np
 from tqdm import tqdm
 from torch import optim
-from torch.utils.data import Dataset, DataLoader, random_split
+from torch.utils.data import DataLoader, random_split
 from torchvision import transforms, utils
+from data import BasicDataset
 from unet import UNet
 from eval import bce_dice_loss, evaluate
 
-
-class BasicDataset(Dataset):
-    def __init__(self, dir_img, dir_mask):
-        self.dir_img = dir_img
-        self.dir_mask = dir_mask
-        self.ids = [os.path.splitext(f)[0] for f in os.listdir(dir_img)]
-
-    def __len__(self):
-        return len(self.ids)
-
-    def transform(self, img, resize=True, W=None, H=None):
-        # resize
-        if resize:
-            img = cv2.resize(img, (W, H))
-        # scale down
-        img = img / 255
-        # expand dimension
-        if len(img.shape) == 2:
-            img = np.expand_dims(img, axis=2)
-        # HWC to CHW
-        img = img.transpose((2, 0, 1))
-        return img
-
-
-    def __getitem__(self, i):
-        idx = self.ids[i]
-        img_file = os.path.join(self.dir_img, idx+'.png')
-        mask_file = os.path.join(self.dir_mask, idx+'.png')
-        img = cv2.imread(img_file, 0)  # input image is in grayscale
-        mask = cv2.imread(mask_file, 0)
-
-        img = self.transform(img, True, 128, 128)
-        mask = self.transform(mask, True, 128, 128)
-
-        sample = {'image':img, 'mask':mask}
-        return sample
 
 
 def train(model, dir_img, dir_mask, dir_checkpoint, 
@@ -112,8 +77,9 @@ def train(model, dir_img, dir_mask, dir_checkpoint,
 
 
 if __name__ == '__main__':
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = UNet(n_filters=32, n_channels=1, n_classes=1)
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    
     # faster convolutions, but more memory
     torch.backends.cudnn.benchmark = True
 
