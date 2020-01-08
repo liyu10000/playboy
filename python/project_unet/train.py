@@ -92,7 +92,7 @@ if __name__ == '__main__':
           batch_size=128,
           lr=0.05,
           val_percent=0.05,
-          save_cp=False,
+          save_cp=True,
           resume_from=0
           )
 

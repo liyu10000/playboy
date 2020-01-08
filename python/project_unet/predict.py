@@ -3,6 +3,8 @@ import cv2
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import numpy as np
+from torchvision import transforms
 from random import randint
 from data import BasicDataset
 from unet import UNet
@@ -18,12 +20,11 @@ def load_model(dir_checkpoint, checkpoint):
 
 def predict(model,
             img,
-            device,
-            threshold=0.5):
+            device):
     model.to(device=device)
     model.eval()
 
-    img = torch.from_numpy(BasicDataset.transform(img, True, 128, 128))
+    img = torch.from_numpy(np.array([BasicDataset.transform(img, True, 128, 128)]))
 
     img = img.to(device=device, dtype=torch.float32)
 
@@ -35,20 +36,12 @@ def predict(model,
         else:
             probs = torch.sigmoid(output)
 
-        probs = probs.squeeze(0)
+        probs = probs.squeeze()
 
-        tf = transforms.Compose(
-            [
-                transforms.ToPILImage(),
-                transforms.Resize(img.size[1]),
-                transforms.ToTensor()
-            ]
-        )
+        mask_pred = probs.cpu().numpy()
+        # mask_pred_b = mask_pred > 0.5  # binary mask
 
-        probs = tf(probs.cpu())
-        full_mask = probs.squeeze().cpu().numpy()
-
-    return full_mask > threshold
+    return mask_pred
 
 
 if __name__ == '__main__':
