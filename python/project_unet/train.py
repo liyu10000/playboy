@@ -4,6 +4,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
+import logging
 from tqdm import tqdm
 from torch import optim
 from torch.utils.data import DataLoader, random_split
@@ -29,6 +30,17 @@ def train(model, dir_img, dir_mask, dir_checkpoint,
 #         ce_loss = nn.CrossEntropyLoss()
 #     else:
 #         ce_loss = nn.BCEWithLogitsLoss()
+
+    logging.info(f'''Starting training:
+        Device:          {device.type}
+        Epochs:          {epochs}
+        Batch size:      {batch_size}
+        Learning rate:   {lr}
+        Training size:   {n_train}
+        Validation size: {n_val}
+        Checkpoints:     {save_cp}
+        Resume from:     {resume_from}
+    ''')
 
     # resume from a checkpoint
     epoch = 0

@@ -1,6 +1,7 @@
 import os
 import cv2
 import numpy as np
+import logging
 from torch.utils.data import Dataset
 
 
@@ -10,6 +11,7 @@ class BasicDataset(Dataset):
         self.dir_img = dir_img
         self.dir_mask = dir_mask
         self.ids = [os.path.splitext(f)[0] for f in os.listdir(dir_img)]
+        logging.info(f'Creating dataset with {len(self.ids)} images')
 
     def __len__(self):
         return len(self.ids)
