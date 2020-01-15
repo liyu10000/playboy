@@ -11,7 +11,7 @@ from torch.utils.data import DataLoader, random_split
 from torchvision import transforms, utils
 from data import BasicDataset
 from unet import UNet
-from eval import bce_dice_loss, evaluate
+from eval import dice_loss, bce_dice_loss, evaluate
 
 
 
@@ -39,7 +39,7 @@ def train(model, dir_img, dir_mask, dir_checkpoint,
         Training size:   {n_train}
         Validation size: {n_val}
         Checkpoints:     {save_cp}
-        Resume from:     {resume_from}
+        Resume from:     {None if resume_from == 0 else resume_from}
     ''')
 
     # resume from a checkpoint
@@ -66,6 +66,7 @@ def train(model, dir_img, dir_mask, dir_checkpoint,
                 masks_true = masks_true.to(device=device, dtype=mask_type)
 
                 masks_pred = model(imgs)
+#                 loss = dice_loss(masks_pred, masks_true)
                 loss = bce_dice_loss(masks_pred, masks_true)
                 epoch_loss += loss.item()
                 pbar.set_postfix(**{'loss': '{:.3f}'.format(epoch_loss/(i+1))})
@@ -89,6 +90,7 @@ def train(model, dir_img, dir_mask, dir_checkpoint,
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
     model = UNet(n_filters=32, n_channels=1, n_classes=1)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
@@ -100,11 +102,11 @@ if __name__ == '__main__':
           dir_mask='./tgs_salt_identification_challenge/train/masks',
           dir_checkpoint='./tgs_salt_identification_challenge/checkpoints',
           device=device,
-          epochs=50,
+          epochs=5,
           batch_size=128,
           lr=0.05,
           val_percent=0.05,
-          save_cp=True,
+          save_cp=False,
           resume_from=0
           )
 
