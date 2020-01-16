@@ -8,6 +8,7 @@ import logging
 from tqdm import tqdm
 from torch import optim
 from torch.utils.data import DataLoader, random_split
+from torch.utils.tensorboard import SummaryWriter
 from torchvision import transforms, utils
 from data import BasicDataset
 from unet import UNet
@@ -31,6 +32,15 @@ def train(model, dir_img, dir_mask, dir_checkpoint,
 #     else:
 #         ce_loss = nn.BCEWithLogitsLoss()
 
+    # resume from a checkpoint
+    if resume_from > 0:
+        model_path = os.path.join(dir_checkpoint, f'epoch{resume_from}.pth')
+        if os.path.isfile(model_path):
+            model.load_state_dict(torch.load(model_path))
+        else:
+            resume_from = 0
+
+    writer = SummaryWriter(comment=f'_LR_{lr}_BS_{batch_size}')
     logging.info(f'''Starting training:
         Device:          {device.type}
         Epochs:          {epochs}
@@ -41,18 +51,12 @@ def train(model, dir_img, dir_mask, dir_checkpoint,
         Checkpoints:     {save_cp}
         Resume from:     {None if resume_from == 0 else resume_from}
     ''')
-
-    # resume from a checkpoint
-    epoch = 0
-    if resume_from > 0:
-        model_path = os.path.join(dir_checkpoint, f'epoch{resume_from}.pth')
-        if os.path.isfile(model_path):
-            model.load_state_dict(torch.load(model_path))
-            epoch = resume_from
+            
+    global_step = 0
 
     model.to(device=device)
 
-    while epoch < epochs:
+    for epoch in range(resume_from, epochs):
         model.train()
 
         epoch_loss = 0
@@ -69,6 +73,8 @@ def train(model, dir_img, dir_mask, dir_checkpoint,
                 loss = dice_loss(masks_pred, masks_true)
 #                 loss = bce_dice_loss(masks_pred, masks_true)
                 epoch_loss += loss.item()
+
+                writer.add_scalar('Loss/train', loss.item(), global_step)
                 pbar.set_postfix(**{'loss': '{:.3f}'.format(epoch_loss/(i+1))})
 
                 optimizer.zero_grad()
@@ -76,6 +82,7 @@ def train(model, dir_img, dir_mask, dir_checkpoint,
                 optimizer.step()
 
                 pbar.update(imgs.shape[0])
+                global_step += 1
 
         val_score = evaluate(model, val_loader, device, n_val)
         print('Epoch {} val score: {:.3f}'.format(epoch+1, val_score))
@@ -84,9 +91,8 @@ def train(model, dir_img, dir_mask, dir_checkpoint,
             os.makedirs(dir_checkpoint, exist_ok=True)
             model_path = os.path.join(dir_checkpoint, f'epoch{epoch+1}.pth')
             torch.save(model.state_dict(), model_path)
-
-        epoch += 1
-
+        
+    writer.close()
 
 
 if __name__ == '__main__':
