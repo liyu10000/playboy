@@ -32,22 +32,21 @@ class DiceCoeff(Function):
         return grad_input, grad_target
 
 
-def dice_coeff(input, target, thres=0.5):
-    """Dice coeff for batches"""
+def dice_coeff(input, target):
     """Dice coeff for batches"""
     if input.is_cuda:
         s = torch.FloatTensor(1).cuda().zero_()
     else:
         s = torch.FloatTensor(1).zero_()
-
+        
     for i, (ip, tg) in enumerate(zip(input, target)):
-        ip = (ip > thres).float()
+        ip = (ip > 0.5).float()  # this operation will loss grad info
         s += DiceCoeff().forward(ip, tg)
         
     return s / (i + 1)
 
 
-def dice_loss(input, target, thres=0.5):
+def dice_loss(input, target):
     """Dice coeff for batches"""
     if input.is_cuda:
         s = torch.FloatTensor(1).cuda().zero_()
@@ -55,7 +54,6 @@ def dice_loss(input, target, thres=0.5):
         s = torch.FloatTensor(1).zero_()
 
     for i, (ip, tg) in enumerate(zip(input, target)):
-        ip = (ip > thres).float()
         s += DiceCoeff().forward(ip, tg)
 
     return 1. - s / (i + 1)
@@ -81,8 +79,8 @@ def evaluate(model, loader, device, n_val):
 
             masks_pred = model(imgs)
             
-#             tot += dice_loss(masks_pred, masks_true).item()
-            tot += bce_dice_loss(masks_pred, masks_true).item()
+            tot += dice_loss(masks_pred, masks_true).item()
+#             tot += bce_dice_loss(masks_pred, masks_true).item()
 
 #             for mask_true, mask_pred in zip(masks_true, masks_pred):
 #                 mask_pred = (mask_pred > 0.5).float()

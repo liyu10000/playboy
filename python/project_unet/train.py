@@ -66,8 +66,8 @@ def train(model, dir_img, dir_mask, dir_checkpoint,
                 masks_true = masks_true.to(device=device, dtype=mask_type)
 
                 masks_pred = model(imgs)
-#                 loss = dice_loss(masks_pred, masks_true)
-                loss = bce_dice_loss(masks_pred, masks_true)
+                loss = dice_loss(masks_pred, masks_true)
+#                 loss = bce_dice_loss(masks_pred, masks_true)
                 epoch_loss += loss.item()
                 pbar.set_postfix(**{'loss': '{:.3f}'.format(epoch_loss/(i+1))})
 
