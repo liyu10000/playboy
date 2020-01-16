@@ -46,6 +46,16 @@ def dice_coeff(input, target):
     return s / (i + 1)
 
 
+# def dice_loss(input, target):
+#     """Dice coeff for batches"""
+#     num = input.size(0)
+#     inter = (input.view(num, -1) * target.view(num, -1)).sum()
+#     union = input.sum() + target.sum()
+
+#     t = (2 * inter.float() + 1) / (union.float() + 1)
+#     return 1 - t / num
+
+
 def dice_loss(input, target):
     """Dice coeff for batches"""
     if input.is_cuda:
